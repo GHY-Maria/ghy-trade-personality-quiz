@@ -1,2 +1,2 @@
-# ghy-marketing-dashboard
-GHY Marketing Dashboard
+# ghy-trade-personality-quiz
+GHY Trade Personality Quiz
