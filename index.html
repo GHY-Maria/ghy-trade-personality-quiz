@@ -73,14 +73,14 @@ button{font:inherit;color:inherit;cursor:pointer}
 .desk{--ink:#0d3b55;--ink-2:#3d5f73;--brand:#00668f;--brand-deep:#0b4664;--gold:#c9a24a;--on-gold:#0b3a52;
   position:relative;overflow:hidden;border-radius:20px;margin-top:6px;color:var(--ink);
   background:radial-gradient(120% 90% at 75% 40%,#fbf8f1 0%,#f1ebdf 55%,#e6dece 100%);
-  min-height:660px;display:flex;align-items:center;padding:40px clamp(18px,4vw,48px);
+  min-height:560px;display:flex;align-items:center;padding:40px clamp(18px,4vw,48px);
   box-shadow:inset 0 0 120px rgba(120,95,50,.12)}
 .desk::before{content:"";position:absolute;inset:0;opacity:.35;pointer-events:none;
   background:repeating-linear-gradient(97deg,rgba(150,120,70,.05) 0 2px,transparent 2px 9px)}
 .scene{position:absolute;inset:0;pointer-events:none}
 .notebook{position:absolute;top:-78px;left:45%;width:330px;transform:rotate(-6deg);filter:drop-shadow(-6px 18px 16px rgba(30,25,15,.45)) drop-shadow(0 3px 3px rgba(30,25,15,.3))}
 .laptop{position:absolute;top:-60px;right:-110px;width:300px;transform:rotate(13deg);filter:drop-shadow(-12px 18px 22px rgba(20,25,30,.35)) drop-shadow(0 2px 2px rgba(20,25,30,.3))}
-.paper{position:absolute;top:110px;right:4%;width:420px;transform:rotate(-6deg);background:#fff;color:#0d3b55;
+.paper{position:absolute;top:96px;right:2%;width:420px;transform:rotate(-6deg);background:#fff;color:#0d3b55;
   font-size:12.5px;line-height:1.35;padding:30px 30px 26px;border-radius:3px;
   box-shadow:0 2px 0 #eee,0 30px 50px -22px rgba(40,30,10,.45),0 6px 14px -6px rgba(40,30,10,.2)}
 .paper .ph{display:flex;align-items:center;gap:14px}
@@ -101,14 +101,23 @@ button{font:inherit;color:inherit;cursor:pointer}
 .paper .cols h4{margin:0 0 5px;font-size:.8em;font-weight:800;color:#00668f;letter-spacing:.08em;text-transform:uppercase}
 .paper .cols p{color:#2f5468;font-size:.92em}
 .compass3d{position:absolute;top:58px;right:4%;width:196px;filter:drop-shadow(-10px 18px 14px rgba(40,25,5,.42)) drop-shadow(-2px 4px 3px rgba(40,25,5,.35));transform:rotate(14deg)}
-.intro{position:relative;z-index:2;max-width:500px;background:rgba(255,253,248,.9);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+.intro{position:relative;z-index:2;max-width:620px;width:56%;background:rgba(255,253,248,.9);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
   border-radius:18px;padding:clamp(22px,3.5vw,38px);box-shadow:0 30px 60px -34px rgba(11,70,100,.5);border:1px solid rgba(201,162,74,.35)}
 .intro .lede,.intro .fine{color:var(--ink-2)}
-.intro .hero-h{font-size:clamp(2rem,4.2vw,3rem)}
+.intro .hero-h{font-size:clamp(1.8rem,3.2vw,2.5rem)}
+.intro .hero-h2{font-size:clamp(1.2rem,2vw,1.5rem);margin-top:6px}
+.intro .rule{margin:12px 0 16px}
+.intro .lede{margin-top:12px;font-size:.95rem}
+.intro .six{font-size:1rem;margin-top:10px}
+.intro .cta-row{gap:10px;margin-top:18px}
+.intro .cta-row .fine{font-size:.82rem;line-height:1.4}
+.intro .btn{flex:none}
+@media (max-width:1100px){.intro{width:60%}}
 @media (max-width:980px){.paper{right:-60px}.compass3d{right:-10px}}
 @media (max-width:820px){
   .desk{display:block;min-height:0;padding:24px 16px 520px}
-  .intro{max-width:none}
+  .intro{max-width:none;width:auto}
+  .intro .cta-row{flex-direction:column;align-items:flex-start}
   .notebook{display:none}
   .paper{top:auto;bottom:-30px;right:50%;width:340px;font-size:10.5px;transform:translateX(50%) rotate(-5deg)}
   .compass3d{top:auto;bottom:290px;right:4%;width:130px}
@@ -594,7 +603,7 @@ function landing(){
       <p class="hero-h2">Today, the tariff schedule classifies you.</p>
       <p class="lede">Answer 10 questions about how you approach risk, compliance, problem-solving, and trade decisions. You'll be classified as one of six official trade personalities:</p>
       <p class="six">Compass. Microscope. Calculator. Scale. Vault. Fire Extinguisher.</p>
-      <p class="lede" style="margin-top:12px">Each classification comes with its own HTS number, trade superpower, strengths, and blind spots.</p>
+      <p class="lede">Each classification comes with its own HTS number, trade superpower, strengths, and blind spots.</p>
       <div class="cta-row">
         <button class="btn btn-gold" id="go">Get classified <span aria-hidden="true">&rarr;</span></button>
         <p class="fine">Your results appear immediately after the last question.<br>Love your classification? Claim your GHY trade personality sticker.</p>
