@@ -255,6 +255,7 @@ table.sched{min-width:780px;font-size:.86rem}
 .pipedriveWebForms iframe{max-width:100%}
 .pd-frame{display:block;width:100%;height:640px;border:0;background:#fff;border-radius:8px}
 .pd-fallback{margin-top:8px}
+.share-note{margin-top:10px}
 .pd-fallback a{color:var(--brand)}
 .sticker h2{font-size:1.4rem;font-weight:800;color:var(--brand-deep)}
 :root[data-theme="dark"] .sticker h2{color:var(--ink)}
@@ -784,6 +785,7 @@ function wireCommon(){
   const m = document.getElementById("mine"); if(m) m.onclick = () => showResult(result);
 }
 
+const QUIZ_URL = "https://www.ghy.com/trade-guides/ghy-trade-personality-quiz/";
 const PD_FORM = "https://webforms.pipedrive.com/f/1wXLtJk9dGXJ0feZOLKO8lVXZzyz4jVTxiNArfl3d8W6RxHXVRWChmmlwZzlMs4M3";
 
 function stickerHTML(p){
@@ -795,12 +797,12 @@ function stickerHTML(p){
     <p class="fine pd-fallback">Form not loading? <a href="${PD_FORM}" target="_blank" rel="noopener">Open it in a new tab</a>.</p>
     <h3 style="margin-top:22px;font-size:1rem">While you're here</h3>
     <div class="thanks-grid">
-      <div class="box"><h3>Share your trade personality</h3><p>Let your network know how you were classified.</p><a class="btn btn-brand" id="sh" target="_blank" rel="noopener" href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(new URL(`share/${p.key}.html`,location.href).href)}">Share on LinkedIn</a></div>
+      <div class="box"><h3>Share your trade personality</h3><p>Let your network know how you were classified.</p><button class="btn btn-brand" type="button" id="sh">Share on LinkedIn</button><p class="fine share-note" id="sharenote" role="status" hidden></p></div>
       <div class="box"><h3>Explore all six</h3><p>See how the rest of your team might be classified.</p><button class="btn btn-ghost" type="button" id="ex">View personalities</button></div>
     </div>
     <div id="sharecard" hidden>
       <div class="social" role="img" aria-label="Share graphic for ${esc(p.name)}">
-        <div><small>Essential Character&trade;</small><small class="g" style="margin-top:10px">I was classified as</small><b style="font-variant-numeric:tabular-nums">${p.hts}</b><small class="g" style="font-size:1rem;letter-spacing:.04em;text-transform:none;font-weight:700">${p.name}</small>
+        <div><small>Essential Character&trade;</small><b style="font-size:clamp(1.7rem,4vw,2.3rem);font-variant-numeric:tabular-nums;color:#fff;margin-top:10px">${p.hts}</b><small class="g" style="font-size:1rem;letter-spacing:.04em;text-transform:none;font-weight:700">${p.name}</small>
         <small class="g" style="margin-top:12px">Trade superpower</small><b style="font-size:1.05rem">${p.power.toUpperCase()}</b><i>${esc(p.belief)}</i></div>
         <div>${p.glyph}</div>
       </div>
@@ -827,7 +829,28 @@ function wireSticker(p){
   pd.appendChild(loader);
   setTimeout(frameForm, 2500);
   const sh = document.getElementById("sh");
-  if(sh) sh.onclick = () => { document.getElementById("sharecard").hidden = false; };
+  if(sh){
+    const img = `share/${p.key}.png`, name = `essential-character-${p.key}.png`;
+    const caption = `I was classified as ${p.name} (HTS ${p.hts}) in GHY's Trade Personality Classification Quiz.\n\nWhat's your trade personality? Take the quiz: ${QUIZ_URL}`;
+    let file = null;
+    fetch(img).then(r=>r.ok?r.blob():null).then(b=>{ if(b) file = new File([b],name,{type:"image/png"}); }).catch(()=>{});
+    sh.onclick = async () => {
+      document.getElementById("sharecard").hidden = false;
+      const note = document.getElementById("sharenote");
+      // Phones: send the image and caption to the LinkedIn app through the device share sheet.
+      if(navigator.clipboard) navigator.clipboard.writeText(caption).catch(()=>{});
+      if(matchMedia("(pointer:coarse)").matches && file && navigator.canShare && navigator.canShare({files:[file]})){
+        try { await navigator.share({files:[file],text:caption}); note.textContent = "If your caption is empty, paste it in. We copied it for you."; note.hidden = false; return; }
+        catch(err){ if(err.name==="AbortError") return; }
+      }
+      // Desktop: LinkedIn cannot accept an image through a link, so save it and open the post window with the caption.
+      window.open("https://www.linkedin.com/feed/?shareActive=true&text="+encodeURIComponent(caption),"_blank","noopener");
+      const a = document.createElement("a");
+      a.href = img; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+      note.textContent = "Your graphic has downloaded. In LinkedIn, add it to your post with the photo icon. Your caption and quiz link are copied too, so paste them in if they aren't already there.";
+      note.hidden = false;
+    };
+  }
   const ex = document.getElementById("ex");
   if(ex) ex.onclick = indexPage;
 }
