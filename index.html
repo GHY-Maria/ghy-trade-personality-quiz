@@ -1,5 +1,8 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Essential Character Quiz</title>
+<meta property="og:title" content="What's your trade personality?">
+<meta property="og:description" content="Take the GHY International Essential Character quiz and get your official trade personality classification.">
+<meta property="og:type" content="website">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -46,7 +49,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .top small{font-size:.8rem;line-height:1.25;color:var(--ink-2)}
 .top .tm{font-size:.8rem;line-height:1.25;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);font-weight:600}
 
-.btn{display:inline-flex;align-items:center;gap:10px;border:0;border-radius:8px;padding:14px 26px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.9rem}
+.btn{text-decoration:none;display:inline-flex;align-items:center;gap:10px;border:0;border-radius:8px;padding:14px 26px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.9rem}
 .btn-gold{background:var(--gold);color:var(--on-gold)}
 .btn-gold:hover{filter:brightness(1.05)}
 .btn-brand{background:var(--brand);color:var(--on-brand)}
@@ -485,7 +488,14 @@ const app = document.getElementById("app");
 let answers = new Array(Q.length).fill(null);
 let idx = 0, result = null, busy = false;
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const top0 = () => window.scrollTo({top:0,behavior:"smooth"});
+const top0 = () => {
+  const jump = () => {
+    window.scrollTo({top:0,left:0,behavior:"instant"});
+    document.documentElement.scrollTop = 0; document.body.scrollTop = 0;
+    document.querySelector(".wrap").scrollIntoView({block:"start",behavior:"instant"});
+  };
+  jump(); requestAnimationFrame(jump);
+};
 
 function landing(){
   app.innerHTML = `
@@ -785,12 +795,12 @@ function stickerHTML(p){
     <p class="fine pd-fallback">Form not loading? <a href="${PD_FORM}" target="_blank" rel="noopener">Open it in a new tab</a>.</p>
     <h3 style="margin-top:22px;font-size:1rem">While you're here</h3>
     <div class="thanks-grid">
-      <div class="box"><h3>Share your trade personality</h3><p>Let your network know how you were classified.</p><button class="btn btn-brand" type="button" id="sh">Share on LinkedIn</button></div>
+      <div class="box"><h3>Share your trade personality</h3><p>Let your network know how you were classified.</p><a class="btn btn-brand" id="sh" target="_blank" rel="noopener" href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(new URL(`share/${p.key}.html`,location.href).href)}">Share on LinkedIn</a></div>
       <div class="box"><h3>Explore all six</h3><p>See how the rest of your team might be classified.</p><button class="btn btn-ghost" type="button" id="ex">View personalities</button></div>
     </div>
     <div id="sharecard" hidden>
       <div class="social" role="img" aria-label="Share graphic for ${esc(p.name)}">
-        <div><small>Essential Character&trade;</small><small class="g" style="margin-top:10px">I was classified as</small><b>${p.name.toUpperCase()}</b><small class="g mono" style="font-size:1rem;letter-spacing:.04em">HTS ${p.short}</small>
+        <div><small>Essential Character&trade;</small><small class="g" style="margin-top:10px">I was classified as</small><b style="font-variant-numeric:tabular-nums">${p.hts}</b><small class="g" style="font-size:1rem;letter-spacing:.04em;text-transform:none;font-weight:700">${p.name}</small>
         <small class="g" style="margin-top:12px">Trade superpower</small><b style="font-size:1.05rem">${p.power.toUpperCase()}</b><i>${esc(p.belief)}</i></div>
         <div>${p.glyph}</div>
       </div>
