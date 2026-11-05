@@ -3,8 +3,8 @@
 <meta property="og:title" content="Essential Character™ Trade Personality Quiz">
 <meta property="og:description" content="Take the GHY International Essential Character™ Trade Personality Quiz and get your official trade personality classification.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://www.ghy.com/trade-guides/ghy-trade-personality-quiz/">
-<meta property="og:image" content="https://www.ghy.com/trade-guides/ghy-trade-personality-quiz/share/quiz.png">
+<meta property="og:url" content="https://ghy-maria.github.io/ghy-trade-personality-quiz/">
+<meta property="og:image" content="https://ghy-maria.github.io/ghy-trade-personality-quiz/share/quiz.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
 <meta name="twitter:card" content="summary_large_image">
@@ -223,6 +223,7 @@ input[readonly]{opacity:.75}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .err{color:#ff9a8f}}
 
 /* share row and famous last words */
+.hts-full.legal p{margin:14px 18px}
 .power-line{margin-top:16px}
 .power-line small{display:block;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--gold)}
 .power-line b{display:block;font-size:clamp(1.3rem,3vw,1.7rem);font-weight:800;color:#fff;line-height:1.2;margin-top:2px}
@@ -379,13 +380,6 @@ const Q = [
   ["M","“It depends.”"],
   ["F","“Let me make a call.”"],
   ["K","“What is the number?”"]]},
- {q:"A new tariff action is announced late on a Friday afternoon.",s:"What do you do first?",o:[
-  ["M","Pull up the notice and check exactly which HTS codes are in scope."],
-  ["F","Find out which shipments on the water will be hit on Monday."],
-  ["C","Think through what it means for next year's sourcing strategy."],
-  ["V","Document how we will apply it so the position holds up later."],
-  ["K","Estimate what it adds to our annual duty spend."],
-  ["S","Check whether our systems can absorb it without new manual work."]]},
  {q:"A coworker asks: We manufacture a product in Mexico using Chinese inputs. Can we claim USMCA/CUSMA?",s:"What is your first response?",o:[
   ["C","How important is this product to the business?"],
   ["M","It depends."],
@@ -393,6 +387,13 @@ const Q = [
   ["S","Is there a faster way to determine eligibility?"],
   ["V","What supporting documentation do we have?"],
   ["F","Do we have a shipment waiting on this answer?"]]},
+ {q:"A new tariff action is announced late on a Friday afternoon.",s:"What do you do first?",o:[
+  ["M","Pull up the notice and check exactly which HTS codes are in scope."],
+  ["F","Find out which shipments on the water will be hit on Monday."],
+  ["C","Think through what it means for next year's sourcing strategy."],
+  ["V","Document how we will apply it so the position holds up later."],
+  ["K","Estimate what it adds to our annual duty spend."],
+  ["S","Check whether our systems can absorb it without new manual work."]]},
  {q:"A shipment is on hold at the border.",s:"What is your instinct?",o:[
   ["F","Call the broker and get it moving."],
   ["K","Work out the storage and demurrage cost per day."],
@@ -449,7 +450,7 @@ let answers = new Array(Q.length).fill(null);
 let idx = 0, result = null, busy = false;
 
 /* ===== SETTINGS: the two lines to edit ===== */
-const QUIZ_URL = "https://www.ghy.com/trade-guides/ghy-trade-personality-quiz/"; // must end in a slash
+const QUIZ_URL = "https://ghy-maria.github.io/ghy-trade-personality-quiz/"; // where index.html and the share folder are hosted; must end in a slash
 const GA4_ID = "";    // Add the GHY GA4 Measurement ID (G-XXXXXXXXXX). Leave blank if the page already loads GA4 or Tag Manager.
 /* =========================================== */
 
@@ -603,8 +604,8 @@ const hero = (p, eyebrow, extra) => `
       ${extra||""}
     </div>
     <div class="big-glyph" role="img" aria-label="${esc(p.img)}">${p.glyph}</div>
-  </section>
-  <section class="flw"><h2>Famous last words</h2><ul>${p.last.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></section>`;
+  </section>`;
+const lastWords = p => `<section class="flw"><h2>Famous last words</h2><ul>${p.last.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></section>`;
 
 function showResult(t, fromIndex){
   const p = P[t], mine = t===result;
@@ -615,24 +616,6 @@ function showResult(t, fromIndex){
       </div><p class="fine share-note" id="sharenote" role="status" hidden></p>` : "";
   app.innerHTML = `
   ${hero(p, fromIndex && !mine ? "Trade Personality Classification" : "Official Trade Personality Classification", shareRow)}
-
-  <section class="sec">
-    <h2>Personality Interpretation</h2>
-    <div class="pi-lead">
-      <div class="prose belief">
-        <small>Core belief</small><b>${esc(p.belief)}</b>
-        <div class="eyebrow">How you see trade &middot; ${p.attr}</div>
-        ${p.how.map(x=>`<p>${esc(x)}</p>`).join("")}
-      </div>
-    </div>
-    <div class="pi-grid">
-      <div class="box pi-str"><h3>Strengths</h3>${ul(p.str)}</div>
-      <div class="box pi-blind"><h3>Blind spots</h3>${ul(p.blind)}</div>
-      <div class="box"><h3>Essential characteristics</h3>${ul(p.enl)}</div>
-    </div>
-  </section>
-
-  ${mine ? `<section class="sticker" id="sticker">${stickerHTML()}</section>` : ""}
 
   <section class="sec">
     <h2>Tariff Classification Record</h2>
@@ -652,12 +635,32 @@ function showResult(t, fromIndex){
       </table></div>
       <p class="sched-note">Base rates only. Chapter 99 additional duties are not shown. Confirm against the current HTS at hts.usitc.gov.</p>
     </details>
-    <details><summary>Legal Notes</summary>
+    <details class="hts-full legal"><summary><span>Legal Notes</span></summary>
       <p>Classification under heading ${head} must be considered in conjunction with the applicable legal notes and General Rules of Interpretation in the HTSUS. The relevant provisions to review include:</p>
       ${p.legal.map(l=>{const k=l.indexOf(":");return `<p><b>${esc(l.slice(0,k))}:</b>${esc(l.slice(k+1))}</p>`}).join("")}
       <p>The applicable notes must be assessed against the actual construction, functions and characteristics of the merchandise. These provisions should not be represented as a definitive legal determination without reviewing the specific product.</p>
     </details>
   </section>
+
+  <section class="sec">
+    <h2>Personality Interpretation</h2>
+    <div class="pi-lead">
+      <div class="prose belief">
+        <small>Core belief</small><b>${esc(p.belief)}</b>
+        <div class="eyebrow">How you see trade &middot; ${p.attr}</div>
+        ${p.how.map(x=>`<p>${esc(x)}</p>`).join("")}
+      </div>
+    </div>
+    <div class="pi-grid">
+      <div class="box pi-str"><h3>Strengths</h3>${ul(p.str)}</div>
+      <div class="box pi-blind"><h3>Blind spots</h3>${ul(p.blind)}</div>
+      <div class="box"><h3>Essential characteristics</h3>${ul(p.enl)}</div>
+    </div>
+  </section>
+
+  ${lastWords(p)}
+
+  ${mine ? `<section class="sticker" id="sticker">${stickerHTML()}</section>` : ""}
 
   <div class="foot-links">
     <button class="link" id="all">See all six trade personalities</button>
@@ -675,6 +678,7 @@ function visitorPage(t){
   const p = P[t], article = /^[AEIOU]/.test(p.name.replace("The ","")) ? "an" : "a";
   app.innerHTML = `
   ${hero(p,"A colleague was classified as")}
+  ${lastWords(p)}
   <section class="visit-cta">
     <h2>Your turn. How does the tariff schedule classify you?</h2>
     <p>Are you ${article} ${esc(p.name.replace("The ",""))} too? 10 questions. 5 minutes.</p>
