@@ -3,12 +3,17 @@
 <meta property="og:title" content="What's your trade personality?">
 <meta property="og:description" content="Take the GHY International Essential Character quiz and get your official trade personality classification.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://www.ghy.com/trade-guides/ghy-trade-personality-quiz/">
+<meta property="og:image" content="https://www.ghy.com/trade-guides/ghy-trade-personality-quiz/share/quiz.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
-/* Layout: one centred stage; screens swap (landing, sliding question cards, classification record, sticker flow, index) */
+/* Layout: one centred stage; screens swap (landing, sliding question cards, shareable result, sticker form, index) */
 :root{
   --bg:#f5f2ea; --surface:#fffdf8; --surface-2:#eef1f0; --line:#ddd6c6;
   --ink:#0d3b55; --ink-2:#3d5f73; --muted:#6c8391;
@@ -71,72 +76,18 @@ button{font:inherit;color:inherit;cursor:pointer}
 .fine{font-size:.9rem;color:var(--ink-2)}
 @media (max-width:820px){.landing{grid-template-columns:1fr;gap:32px}}
 
-/* desk scene: fixed "photographed desk" look in both themes; intro card sits in front */
-.desk{--ink:#0d3b55;--ink-2:#3d5f73;--brand:#00668f;--brand-deep:#0b4664;--gold:#c9a24a;--on-gold:#0b3a52;
-  position:relative;overflow:hidden;border-radius:20px;margin-top:6px;color:var(--ink);
-  background:radial-gradient(120% 90% at 75% 40%,#fbf8f1 0%,#f1ebdf 55%,#e6dece 100%);
-  min-height:clamp(440px,calc(100svh - 112px),620px);display:flex;align-items:center;padding:24px clamp(18px,3.5vw,40px);
-  box-shadow:inset 0 0 120px rgba(120,95,50,.12)}
-.desk::before{content:"";position:absolute;inset:0;opacity:.35;pointer-events:none;
-  background:repeating-linear-gradient(97deg,rgba(150,120,70,.05) 0 2px,transparent 2px 9px)}
-.scene{position:absolute;inset:0;pointer-events:none}
-/* fixed 720x620 rig, scaled by --k to the desk height (desktop) or width (phone) */
-.rig{position:absolute;top:0;right:0;width:720px;height:620px;transform-origin:top right;transform:scale(var(--k,1))}
-.notebook{position:absolute;top:-78px;right:250px;width:330px;transform:rotate(-6deg);filter:drop-shadow(-6px 18px 16px rgba(30,25,15,.45)) drop-shadow(0 3px 3px rgba(30,25,15,.3))}
-.laptop{position:absolute;top:-60px;right:-120px;width:300px;transform:rotate(13deg);filter:drop-shadow(-12px 18px 22px rgba(20,25,30,.35)) drop-shadow(0 2px 2px rgba(20,25,30,.3))}
-.paper{position:absolute;top:96px;right:24px;width:420px;transform:rotate(-6deg);background:#fff;color:#0d3b55;
-  font-size:12.5px;line-height:1.35;padding:30px 30px 26px;border-radius:3px;
-  box-shadow:0 2px 0 #eee,0 30px 50px -22px rgba(40,30,10,.45),0 6px 14px -6px rgba(40,30,10,.2)}
-.paper .ph{display:flex;align-items:center;gap:14px}
-.plogo{width:84px;background:#036690}
-.paper .ph span{border-left:1.5px solid #c9a24a;padding-left:12px;color:#00668f;font-weight:700;font-size:.78em;letter-spacing:.14em;text-transform:uppercase;line-height:1.35}
-.paper h3{font-size:1.75em;font-weight:800;color:#0b5a80;text-transform:uppercase;letter-spacing:.02em;margin-top:18px;line-height:1.1}
-.paper .gl{height:1.5px;background:#c9a24a;margin:12px 0}
-.paper dl{display:grid;grid-template-columns:auto 1fr;margin:0}
-.paper dt,.paper dd{border-bottom:1px solid #e3e7ea;padding:4px 0;margin:0}
-.paper dt{font-weight:700;color:#00668f;font-size:.82em;letter-spacing:.08em;text-transform:uppercase;padding-right:18px;border-right:1px solid #e3e7ea}
-.paper dd{padding-left:14px;color:#2f5468;font-family:var(--f-mono)}
-.paper .pc{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
-.paper .pc small{font-weight:700;color:#00668f;font-size:.8em;letter-spacing:.08em;text-transform:uppercase}
-.paper .pc b{display:block;font-size:1.9em;font-weight:800;color:#0b5a80;line-height:1}
-.paper .pc i{display:block;font-style:normal;color:#c9a24a;font-weight:700;font-size:.8em;letter-spacing:.12em;margin-top:3px}
-.paper .cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.paper .cols div + div{border-left:1.5px solid #c9a24a;padding-left:14px}
-.paper .cols h4{margin:0 0 5px;font-size:.8em;font-weight:800;color:#00668f;letter-spacing:.08em;text-transform:uppercase}
-.paper .cols p{color:#2f5468;font-size:.92em}
-.compass3d{position:absolute;top:58px;right:40px;width:196px;filter:drop-shadow(-10px 18px 14px rgba(40,25,5,.42)) drop-shadow(-2px 4px 3px rgba(40,25,5,.35));transform:rotate(14deg)}
-.intro{position:relative;z-index:2;max-width:600px;width:57%;background:rgba(255,253,248,.9);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
-  border-radius:18px;padding:clamp(20px,2.6vw,30px) clamp(20px,2.8vw,34px);box-shadow:0 30px 60px -34px rgba(11,70,100,.5);border:1px solid rgba(201,162,74,.35)}
-.intro .lede,.intro .fine{color:var(--ink-2)}
-.intro .hero-h{font-size:clamp(1.7rem,2.9vw,2.3rem)}
-.intro .hero-h2{font-size:clamp(1.1rem,1.7vw,1.3rem);margin-top:6px}
-.intro .rule{margin:10px 0 12px}
-.intro .eyebrow{font-size:.7rem;letter-spacing:.12em}
-.intro .lede{margin-top:10px;font-size:.92rem;line-height:1.5}
-.intro .six{font-size:.98rem;margin-top:8px}
-.intro .cta-row{gap:8px;margin-top:16px}
-.intro .cta-row .fine{font-size:.82rem;line-height:1.4}
-.intro .btn{flex:none}
-@media (max-width:1100px){.intro{width:60%}}
-@media (max-width:820px){
-  .desk{display:block;min-height:0;padding:20px 14px 460px}
-  .intro{max-width:none;width:auto}
-  .intro .cta-row{flex-direction:column;align-items:flex-start}
-  .rig{top:auto;bottom:-40px;transform-origin:bottom right}
-}
-/* specimen record card on landing */
-.record{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:26px 24px;box-shadow:0 20px 50px -24px rgba(11,70,100,.35);transform:rotate(-2.2deg)}
-.record .rh{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:2px solid var(--gold);padding-bottom:12px}
-.record .rt{font-weight:800;color:var(--brand);font-size:1.05rem;letter-spacing:.04em;text-transform:uppercase;line-height:1.2}
-.record dl{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin:14px 0 0;font-size:.85rem}
-.record dt{font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);font-size:.72rem;padding-top:3px}
-.record dd{margin:0;border-bottom:1px solid var(--line);padding-bottom:4px}
-.record .who{margin-top:16px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-.record .who b{font-size:1.4rem;color:var(--brand-deep);font-weight:800}
-:root[data-theme="dark"] .record .who b{color:var(--ink)}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .record .who b{color:var(--ink)}}
-.record .who span{color:var(--gold);font-weight:700;font-size:.75rem;letter-spacing:.12em}
-.record .glyph{width:64px;height:64px;flex:none;color:var(--gold)}
+/* classification-pending card: teases the record without showing an outcome */
+.pending{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:24px;box-shadow:0 20px 50px -28px rgba(11,70,100,.4);transform:rotate(-1.6deg)}
+.pending .rt{font-weight:800;color:var(--brand);letter-spacing:.06em;text-transform:uppercase;font-size:.95rem;line-height:1.25;padding-bottom:12px;border-bottom:2px solid var(--gold)}
+.pending dl{display:grid;grid-template-columns:auto 1fr;gap:10px 18px;margin:16px 0 0;align-items:center}
+.pending dt{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.pending dd{margin:0;font-family:var(--f-mono);color:var(--ink);font-size:1.05rem;letter-spacing:.04em}
+.pending .stamp{display:inline-block;margin-top:18px;border:2px solid var(--gold);color:var(--gold);border-radius:6px;padding:4px 10px;font-weight:800;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;transform:rotate(-3deg)}
+.landing{min-height:clamp(420px,calc(100svh - 120px),600px)}
+.landing .hero-h{font-size:clamp(2.1rem,4.6vw,3.2rem)}
+.landing .meta{margin-top:18px;color:var(--ink-2);font-weight:600}
+.landing .btn{margin-top:24px}
+@media (max-width:820px){.landing{min-height:0;padding-block:20px}}
 
 /* quiz */
 .progress-row{display:flex;justify-content:space-between;font-size:.9rem;color:var(--ink-2);margin-top:6px}
@@ -182,7 +133,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .chip{border:1px solid rgba(255,255,255,.3);border-radius:99px;padding:5px 12px;font-size:.8rem;color:#fff}
 .chip b{color:var(--gold);font-weight:700;margin-right:6px;letter-spacing:.08em;text-transform:uppercase;font-size:.7rem}
 .res-hero .big-glyph{width:150px;height:150px;color:var(--gold);background:rgba(255,255,255,.06);border-radius:50%;padding:22px}
-@media (max-width:640px){.res-hero{grid-template-columns:1fr}.res-hero .big-glyph{width:110px;height:110px;order:-1}}
+@media (max-width:640px){.res-hero{grid-template-columns:1fr;position:relative}.res-hero .eyebrow{padding-right:70px}.res-hero .big-glyph{position:absolute;top:16px;right:16px;width:64px;height:64px;padding:10px}}
 
 .sec{margin-top:34px}
 .sec > h2{font-size:1.3rem;font-weight:800;color:var(--brand-deep);display:flex;align-items:center;gap:12px}
@@ -220,9 +171,8 @@ table.sched{min-width:780px;font-size:.86rem}
 .sched tr.hit td{background:var(--gold-soft);font-weight:600;color:var(--ink)}
 .sched-note{padding:10px 18px 12px;font-size:.8rem;color:var(--muted);max-width:none;border-top:1px solid var(--line)}
 
-.pi-lead{display:grid;grid-template-columns:minmax(0,1fr) 240px;margin-top:16px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface)}
+.pi-lead{display:grid;grid-template-columns:minmax(0,1fr);margin-top:16px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface)}
 .pi-lead > *{min-width:0}
-@media (max-width:760px){.pi-lead{grid-template-columns:1fr}}
 .prose p{color:var(--ink-2);max-width:62ch}
 .prose p + p{margin-top:12px}
 .belief{padding:24px 26px}
@@ -234,8 +184,8 @@ table.sched{min-width:780px;font-size:.86rem}
 .power{background:var(--gold);color:var(--on-gold);padding:24px;display:flex;flex-direction:column;justify-content:center}
 .power small{display:block;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;opacity:.8}
 .power b{display:block;font-size:1.5rem;font-weight:800;margin-top:6px;line-height:1.2}
-.pi-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}
-@media (max-width:640px){.pi-grid{grid-template-columns:1fr}}
+.pi-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:16px}
+@media (max-width:820px){.pi-grid{grid-template-columns:1fr}}
 .box.pi-str{border-top:3px solid var(--brand)}
 .box.pi-blind{border-top:3px solid var(--gold)}
 .box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
@@ -247,10 +197,8 @@ table.sched{min-width:780px;font-size:.86rem}
 .box.quote li::after{content:"\201D";color:var(--gold);font-weight:800}
 
 /* sticker */
-.sticker{margin-top:38px;background:var(--surface);border:2px dashed var(--gold);border-radius:18px;padding:clamp(20px,4vw,36px);display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:start}
+.sticker{margin-top:38px;background:var(--surface);border:2px dashed var(--gold);border-radius:18px;padding:clamp(20px,4vw,36px)}
 .sticker > *{min-width:0}
-@media (max-width:640px){.sticker{grid-template-columns:1fr}}
-.stk{font-size:clamp(1.6rem,3vw,2rem);font-weight:800;line-height:1.15;white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--stk)}
 .pipedriveWebForms{margin-top:14px;min-height:120px}
 .pipedriveWebForms iframe{max-width:100%}
 .pd-frame{display:block;width:100%;height:640px;border:0;background:#fff;border-radius:8px}
@@ -260,7 +208,6 @@ table.sched{min-width:780px;font-size:.86rem}
 .sticker h2{font-size:1.4rem;font-weight:800;color:var(--brand-deep)}
 :root[data-theme="dark"] .sticker h2{color:var(--ink)}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .sticker h2{color:var(--ink)}}
-.sticker > div > p{color:var(--ink-2);margin-top:8px;max-width:58ch}
 form{display:grid;gap:14px;margin-top:18px;max-width:520px}
 label{font-weight:700;font-size:.88rem;display:grid;gap:6px}
 label em{color:var(--brand);font-style:normal}
@@ -270,21 +217,29 @@ input[readonly]{opacity:.75}
 .err{color:#b3261e;font-size:.85rem;font-weight:600}
 :root[data-theme="dark"] .err{color:#ff9a8f}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .err{color:#ff9a8f}}
-.steps{display:flex;gap:8px;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-top:14px}
-.steps .on{color:var(--brand)}
-.thanks-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px}
-@media (max-width:760px){.thanks-grid{grid-template-columns:1fr}}
-.thanks-grid .box p{color:var(--ink-2);margin-top:8px;font-size:.92rem}
-.thanks-grid .box .btn{margin-top:14px;padding:10px 16px;font-size:.78rem}
 
-/* social card */
-.social{margin-top:16px;background:#00668f;color:#fff;border-radius:12px;padding:22px;display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;max-width:620px}
-.social > *{min-width:0}
-.social small{display:block;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase}
-.social .g{color:#e2c06e}
-.social b{display:block;font-size:1.4rem;font-weight:800;margin:4px 0}
-.social svg{width:90px;height:90px;color:#e2c06e}
-.social i{display:block;margin-top:8px;color:#e7f1f5}
+/* share row and famous last words */
+.power-line{margin-top:16px}
+.power-line small{display:block;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--gold)}
+.power-line b{display:block;font-size:clamp(1.3rem,3vw,1.7rem);font-weight:800;color:#fff;line-height:1.2;margin-top:2px}
+.share-row{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;margin-top:22px}
+.btn-li{background:#0a66c2;color:#fff;letter-spacing:.02em;text-transform:none;font-size:1rem;padding:12px 20px;gap:10px}
+.btn-li:hover{background:#004182}
+.btn-li svg{width:22px;height:22px;flex:none;fill:currentColor}
+.challenge{background:none;border:0;padding:0;color:var(--gold);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.res-hero .share-note{color:#e7f1f5;margin-top:10px;max-width:60ch}
+.flw{margin-top:18px;background:var(--gold-soft);border-radius:14px;padding:clamp(20px,3vw,30px)}
+.flw h2{font-size:.8rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+.flw ul{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:10px}
+.flw li{font-size:clamp(1.15rem,2.4vw,1.4rem);font-weight:700;line-height:1.3;color:var(--ink)}
+.flw li::before{content:"\201C"}.flw li::after{content:"\201D"}
+.visit-cta{margin-top:18px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:clamp(20px,3vw,30px)}
+.visit-cta h2{font-size:clamp(1.3rem,3vw,1.7rem);font-weight:800;color:var(--brand-deep)}
+:root[data-theme="dark"] .visit-cta h2{color:var(--ink)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .visit-cta h2{color:var(--ink)}}
+.visit-cta p{color:var(--ink-2);margin-top:6px}
+.visit-cta .btn{margin-top:16px}
+.sent{margin-top:14px;font-weight:700;color:var(--brand)}
 
 .foot-links{display:flex;gap:22px;flex-wrap:wrap;margin-top:26px;align-items:center}
 .disclaimer{margin-top:22px;font-size:.82rem;font-style:italic;color:var(--muted);max-width:80ch}
@@ -330,7 +285,7 @@ const LN84 = ["Section XVI Notes: General provisions governing machinery and mec
 const NOSTAT = "No additional statistical breakout shown at this level";
 
 const P = {
-  C:{key:"compass",name:"The Compass",attr:"Direction",hts:"9014.10.90.00",short:"9014.10",glyph:G.compass,
+  C:{key:"compass",tag:"V",name:"The Compass",attr:"Direction",hts:"9014.10.90.00",short:"9014.10",glyph:G.compass,
     sched:[{n:"9014",i:0,d:"Direction finding compasses; other navigational instruments and appliances; parts and accessories thereof:"},{n:"9014.10",i:1,d:"Direction finding compasses:"},{i:2,d:"Other:"},{i:3,d:"Other:"},{n:"9014.10.90",s:"00",i:4,d:"Other",u:"No.",g:"Free",c2:"45%",hit:1}],
     prod:"Other direction-finding compasses",img:"Magnetic direction-finding compass",
     rows:[["Section XVIII","Optical, photographic, cinematographic, measuring, checking, precision, medical or surgical instruments and apparatus; clocks and watches; musical instruments; parts and accessories thereof"],["Chapter 90",SEC18],["Heading 9014","Direction-finding compasses; other navigational instruments and appliances; parts and accessories thereof"],["Subheading 9014.10.90","Other direction finding compasses"],["Statistical suffix 00",NOSTAT]],
@@ -343,7 +298,7 @@ const P = {
     last:["Let us zoom out for a second.", "This is bigger than customs.", "What opportunity does this create?"],
     enl:["Reads trade headlines before checking email.","Thinks geopolitical risk is fascinating.","Can turn customs clearance into a market expansion discussion."],
     idx:"Connects trade decisions to long-term goals and strategic opportunities."},
-  M:{key:"microscope",name:"The Microscope",attr:"Precision",hts:"9011.80.00.00",short:"9011.80",glyph:G.microscope,
+  M:{key:"microscope",tag:"C",name:"The Microscope",attr:"Precision",hts:"9011.80.00.00",short:"9011.80",glyph:G.microscope,
     sched:[{n:"9011",i:0,d:"Compound optical microscopes, including those for photomicrography, cinemicrography or microprojection; parts and accessories thereof:"},{n:"9011.80.00",s:"00",i:1,d:"Other microscopes",u:"No.",g:"Free",c2:"See HTS",hit:1}],
     prod:"Other microscopes",img:"Microscope",
     rows:[["Section XVIII","Optical, photographic, cinematographic, measuring, checking, precision, medical or surgical instruments and apparatus; clocks and watches; musical instruments; parts and accessories thereof"],["Chapter 90",SEC18],["Heading 9011","Compound optical microscopes, including those for photomicrography, cinemicrography or microprojection; parts and accessories thereof"],["Subheading 9011.80.00","Other microscopes"],["Statistical suffix 00",NOSTAT]],
@@ -356,7 +311,7 @@ const P = {
     last:["Just give me ten minutes with the tariff.", "I need the specs, the invoice, the supplier declaration and maybe a snack.", "We may be looking through the wrong lens."],
     enl:["Owns a tariff schedule.","Knows what the Explanatory Notes are.","Has said, “That is actually an origin question,” at least once."],
     idx:"Examines details, questions assumptions and looks for the evidence behind a decision."},
-  K:{key:"calculator",name:"The Calculator",attr:"Financial Impact",hts:"8470.21.00.00",short:"8470.21",glyph:G.calc,
+  K:{key:"calculator",tag:"S",name:"The Calculator",attr:"Financial Impact",hts:"8470.21.00.00",short:"8470.21",glyph:G.calc,
     sched:[{n:"8470",i:0,d:"Calculating machines and pocket-size data recording, reproducing and displaying machines with calculating functions; accounting machines, postage-franking machines, ticket-issuing machines and similar machines, incorporating a calculating device; cash registers:"},{i:1,d:"Other electronic calculating machines:"},{n:"8470.21.00",s:"00",i:2,d:"Incorporating a printing device",u:"No.",g:"Free",c2:"See HTS",hit:1}],
     prod:"Calculating machines incorporating a printing device",img:"Printing calculator",
     rows:[["Section XVI",SEC16],["Chapter 84",CH84],["Heading 8470","Calculating machines and pocket-size data recording, reproducing and displaying machines with calculating functions; accounting machines, postage-franking machines, ticket-issuing machines and similar machines, incorporating a calculating device; cash registers"],["Subheading 8470.21.00","Electronic calculating machines incorporating a printing device"],["Statistical suffix 00",NOSTAT]],
@@ -369,7 +324,7 @@ const P = {
     last:["I just need five minutes and an Excel file.", "That is more money than people think.", "Show me the numbers."],
     enl:["Secretly enjoys pivot tables.","Gets excited when someone says “tariff refund.”","Can estimate annual duty exposure quickly."],
     idx:"Measures duty exposure, identifies potential savings and turns trade data into business decisions."},
-  S:{key:"scale",name:"The Scale",attr:"Balance",hts:"8423.10.00.10",short:"8423.10",glyph:G.scale,
+  S:{key:"scale",tag:"K",name:"The Scale",attr:"Balance",hts:"8423.10.00.10",short:"8423.10",glyph:G.scale,
     sched:[{n:"8423",i:0,d:"Weighing machinery (excluding balances of a sensitivity of 5 cg or better), including weight-operated counting or checking machines; weighing machine weights of all kinds; parts of weighing machinery:"},{n:"8423.10.00",i:1,d:"Personal weighing machines, including baby scales; household scales",g:"Free",c2:"45%"},{s:"10",i:2,d:"Digital electronic type",u:"No.",hit:1}],
     prod:"Digital electronic type of personal weighing machine",img:"Digital electronic personal weighing scale",
     rows:[["Section XVI",SEC16],["Chapter 84",CH84],["Heading 8423","Weighing machinery (excluding balances of a sensitivity of 5 cg or better), including weight-operated counting or checking machines; weighing machine weights of all kinds; parts of weighing machinery"],["Subheading 8423.10.00","Personal weighing machines, including baby scales; household scales"],["Statistical suffix 10","Digital electronic type"]],
@@ -382,7 +337,7 @@ const P = {
     last:["Let us stop treating manual work as a strategy.","What happens if we automate it?","How much time does this process cost us?"],
     enl:["Tests AI tools before everyone else.","Has strong opinions about the value of manually classifying thousands of SKUs.","Describes spreadsheets as temporary solutions.","Looks for a better process when everyone else accepts the existing one."],
     idx:"Weighs competing priorities and looks for practical, efficient processes."},
-  V:{key:"vault",name:"The Vault",attr:"Protection",hts:"8303.00.00.00",short:"8303.00",glyph:G.vault,
+  V:{key:"vault",tag:"F",name:"The Vault",attr:"Protection",hts:"8303.00.00.00",short:"8303.00",glyph:G.vault,
     sched:[{n:"8303.00.00",s:"00",i:0,d:"Armored or reinforced safes, strong-boxes and doors and safe deposit lockers for strong-rooms, cash or deed boxes and the like, and parts thereof, of base metal",u:"kg",g:"3.8%",sp:"Free (A, AU, BH, CL, CO, D, E, IL, JO, KR, MA, OM, P, PA, PE, S, SG)",c2:"45%",hit:1}],
     prod:"Armored or reinforced safes, strong-boxes and doors and safe deposit lockers for strong-rooms, cash or deed boxes and the like, and parts thereof, of base metal",img:"Armored or reinforced safe",
     rows:[["Section XV","Base metals and articles of base metal"],["Chapter 83","Miscellaneous articles of base metal"],["Heading 8303","Armored or reinforced safes, strong-boxes and doors and safe deposit lockers for strong-rooms, cash or deed boxes and the like, and parts thereof, of base metal"],["Subheading 8303.00.00","Armored or reinforced safes, strong-boxes and doors and safe deposit lockers for strong-rooms, cash or deed boxes and the like, and parts thereof, of base metal"],["Statistical suffix 00",NOSTAT]],
@@ -395,7 +350,7 @@ const P = {
     last:["I believe you. I just need the paperwork.", "Future us will thank us for this.", "Can we defend this position?"],
     enl:["Saves emails just in case.","Uses the phrase “supportable position.”","Knows exactly where the supplier declaration is."],
     idx:"Prioritizes defensible decisions, reliable documentation and risk management."},
-  F:{key:"fire",name:"The Fire Extinguisher",attr:"Exceptions",hts:"8424.10.00.00",short:"8424.10",glyph:G.fire,
+  F:{key:"fire",tag:"M",name:"The Fire Extinguisher",attr:"Exceptions",hts:"8424.10.00.00",short:"8424.10",glyph:G.fire,
     sched:[{n:"8424",i:0,d:"Mechanical appliances (whether or not hand operated) for projecting, dispersing or spraying liquids or powders; fire extinguishers, whether or not charged; spray guns and similar appliances; steam or sand blasting machines and similar jet projecting machines; parts thereof:"},{n:"8424.10.00",s:"00",i:1,d:"Fire extinguishers, whether or not charged",u:"No.",g:"Free",c2:"35%",hit:1}],
     prod:"Fire extinguishers, whether or not charged",img:"Fire extinguisher",
     rows:[["Section XVI",SEC16],["Chapter 84",CH84],["Heading 8424","Mechanical appliances (whether or not hand operated) for projecting, dispersing or spraying liquids or powders; fire extinguishers, whether or not charged; spray guns and similar appliances; steam or sand blasting machines and similar jet projecting machines; parts thereof"],["Subheading 8424.10.00","Fire extinguishers, whether or not charged"],["Statistical suffix 00",NOSTAT]],
@@ -411,8 +366,15 @@ const P = {
 };
 const ORDER = ["C","M","K","S","V","F"];
 
-/* Q2 is the sample question from the brief; the others follow the same six-answer pattern (one answer per personality). */
+/* Every question has six answers, one per personality. Scoring: most-picked personality wins; ties go to the most recent pick. */
 const Q = [
+ {q:"Which phrase do you say most at work?",s:"Pick the one your team would pick for you.",o:[
+  ["S","“Why do we still do it this way?”"],
+  ["C","“What is the bigger picture?”"],
+  ["V","“Do we have that in writing?”"],
+  ["M","“It depends.”"],
+  ["F","“Let me make a call.”"],
+  ["K","“What is the number?”"]]},
  {q:"A new tariff action is announced late on a Friday afternoon.",s:"What do you do first?",o:[
   ["M","Pull up the notice and check exactly which HTS codes are in scope."],
   ["F","Find out which shipments on the water will be hit on Monday."],
@@ -420,7 +382,7 @@ const Q = [
   ["V","Document how we will apply it so the position holds up later."],
   ["K","Estimate what it adds to our annual duty spend."],
   ["S","Check whether our systems can absorb it without new manual work."]]},
- {q:"A coworker asks: We manufacture a product in Mexico using Chinese inputs. Can we claim CUSMA?",s:"What is your first response?",o:[
+ {q:"A coworker asks: We manufacture a product in Mexico using Chinese inputs. Can we claim USMCA/CUSMA?",s:"What is your first response?",o:[
   ["C","How important is this product to the business?"],
   ["M","It depends."],
   ["K","How much duty exposure is there?"],
@@ -448,13 +410,6 @@ const Q = [
   ["S","Set up a supplier certification workflow so it does not happen again."],
   ["K","Calculate what we would owe if the preference is denied."],
   ["C","Reassess whether this supplier fits our long-term plan."]]},
- {q:"Which phrase do you say most at work?",s:"Pick the one your team would pick for you.",o:[
-  ["S","“Why do we still do it this way?”"],
-  ["C","“What is the bigger picture?”"],
-  ["V","“Do we have that in writing?”"],
-  ["M","“It depends.”"],
-  ["F","“Let me make a call.”"],
-  ["K","“What is the number?”"]]},
  {q:"A new free trade agreement comes into force.",s:"What gets you most interested?",o:[
   ["C","The new markets we can enter."],
   ["M","Reading the rules of origin annexes."],
@@ -488,6 +443,42 @@ const Q = [
 const app = document.getElementById("app");
 let answers = new Array(Q.length).fill(null);
 let idx = 0, result = null, busy = false;
+
+/* ===== SETTINGS: the two lines to edit ===== */
+const QUIZ_URL = "https://www.ghy.com/trade-guides/ghy-trade-personality-quiz/"; // must end in a slash
+const GA4_ID = "";    // Add the GHY GA4 Measurement ID (G-XXXXXXXXXX). Leave blank if the page already loads GA4 or Tag Manager.
+/* =========================================== */
+
+const store = {
+  get(a,k){ try { return window[a].getItem(k); } catch(e){ return null; } },
+  set(a,k,v){ try { window[a].setItem(k,v); } catch(e){} }
+};
+const keyToT = k => ORDER.find(t=>P[t].key===k);
+const qs = new URLSearchParams(location.search);
+const setURL = q => { try { history.replaceState(null,"",location.pathname+q); } catch(e){} };
+
+/* Attribution: which shared link brought this visitor in. Lasts for the browser session. */
+let ref = {personality:"direct", source:"direct"};
+try { ref = JSON.parse(store.get("sessionStorage","ec_ref")) || ref; } catch(e){}
+
+if(GA4_ID && typeof window.gtag!=="function"){
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function(){ dataLayer.push(arguments); };
+  gtag("js",new Date()); gtag("config",GA4_ID);
+  const s = document.createElement("script"); s.async = true; s.src = "https://www.googletagmanager.com/gtag/js?id="+GA4_ID; document.head.appendChild(s);
+}
+/* Events: quiz_start, quiz_complete, quiz_share, quiz_form_start, quiz_form_submit, quiz_shared_visit.
+   personality = the result, except on quiz_start and quiz_shared_visit, where it is the personality of the shared link ("direct" if none). */
+function track(name, personality, extra){
+  const data = {personality, share_source:ref.source, ...extra};
+  if(typeof window.gtag==="function") window.gtag("event",name,data);
+  else { window.dataLayer = window.dataLayer || []; window.dataLayer.push({event:name,...data}); }
+}
+const startQuiz = () => {
+  answers.fill(null); idx = 0; result = null; setURL("");
+  track("quiz_start",ref.personality);
+  quizShell(); top0();
+};
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const top0 = () => {
   const jump = () => {
@@ -499,143 +490,22 @@ const top0 = () => {
 };
 
 function landing(){
+  setURL("");
   app.innerHTML = `
-  <section class="desk">
-    <div class="scene" aria-hidden="true"><div class="rig">
-      <svg class="notebook" viewBox="0 0 330 230" aria-hidden="true">
-  <defs>
-    <linearGradient id="nbCover" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a5a70"/><stop offset=".45" stop-color="#17435a"/><stop offset="1" stop-color="#0b2938"/></linearGradient>
-    <linearGradient id="nbSpine" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".45"/><stop offset=".6" stop-color="#000" stop-opacity=".1"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
-    <linearGradient id="nbPages" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbf5e6"/><stop offset="1" stop-color="#d9ccae"/></linearGradient>
-    <pattern id="nbLeaves" width="4" height="2.2" patternUnits="userSpaceOnUse"><rect width="4" height="2.2" fill="url(#nbPages)"/><rect y="1.6" width="4" height=".6" fill="#c8b994" opacity=".7"/></pattern>
-    <linearGradient id="nbBand" x1="0" x2="1"><stop offset="0" stop-color="#7d5a17"/><stop offset=".3" stop-color="#e2bf62"/><stop offset=".55" stop-color="#f6dd92"/><stop offset=".8" stop-color="#b98c2c"/><stop offset="1" stop-color="#6e4e12"/></linearGradient>
-    <linearGradient id="nbSheen" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".35" stop-color="#fff" stop-opacity="0"/><stop offset=".8" stop-color="#fff" stop-opacity=".05"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
-    <filter id="nbLeather" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="3" seed="4" result="n"/><feDiffuseLighting in="n" surfaceScale="1.6" lighting-color="#fff" result="l"><feDistantLight azimuth="225" elevation="55"/></feDiffuseLighting><feComposite in="l" in2="SourceGraphic" operator="in"/></filter>
-    <clipPath id="nbClip"><rect x="6" y="0" width="318" height="212" rx="12"/></clipPath>
-  </defs>
-  <rect x="12" y="14" width="314" height="210" rx="10" fill="url(#nbLeaves)"/>
-  <rect x="12" y="14" width="314" height="210" rx="10" fill="none" stroke="#bfae86" stroke-width="1"/>
-  <g clip-path="url(#nbClip)">
-    <rect x="6" y="0" width="318" height="212" fill="url(#nbCover)"/>
-    <rect x="6" y="0" width="318" height="212" fill="#fff" filter="url(#nbLeather)" opacity=".13" style="mix-blend-mode:overlay"/>
-    <rect x="6" y="0" width="30" height="212" fill="url(#nbSpine)"/>
-    <rect x="6" y="0" width="318" height="212" fill="url(#nbSheen)"/>
-    <rect x="16" y="9" width="298" height="194" rx="7" fill="none" stroke="#8fb3c4" stroke-opacity=".35" stroke-width="1.1" stroke-dasharray="4 3"/>
-  </g>
-  <rect x="6.5" y=".5" width="317" height="211" rx="11.5" fill="none" stroke="#06202c" stroke-opacity=".6"/>
-  <path d="M250 205 l0 24 l9 -6 l9 6 l0 -24z" fill="#b8902f"/><path d="M250 205 l0 24 l9 -6z" fill="#000" opacity=".15"/>
-  <rect x="252" y="-2" width="17" height="216" fill="url(#nbBand)"/>
-  <rect x="252" y="-2" width="17" height="216" fill="none" stroke="#5a3f0d" stroke-opacity=".5" stroke-width=".6"/>
-  <rect x="246" y="-2" width="6" height="216" fill="#000" opacity=".12"/>
-</svg>
-      <svg class="laptop" viewBox="0 0 300 400" aria-hidden="true">
-  <defs>
-    <linearGradient id="lkBody" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4f5f7"/><stop offset=".4" stop-color="#d9dce0"/><stop offset=".75" stop-color="#c3c7cc"/><stop offset="1" stop-color="#aeb3b9"/></linearGradient>
-    <linearGradient id="lkKey" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b3f46"/><stop offset="1" stop-color="#1f2227"/></linearGradient>
-    <linearGradient id="lkWell" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8d939a"/><stop offset="1" stop-color="#a7adb3"/></linearGradient>
-    <linearGradient id="lkPad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e3e6e9"/><stop offset="1" stop-color="#c7cbd0"/></linearGradient>
-    <filter id="lkBrush" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.004 0.9" numOctaves="2" seed="7"/><feColorMatrix values="0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .52  0 0 0 .18 0"/><feComposite in2="SourceGraphic" operator="in"/></filter>
-  </defs>
-  <rect x="2" y="2" width="296" height="396" rx="26" fill="url(#lkBody)"/>
-  <rect x="2" y="2" width="296" height="396" rx="26" fill="#000" filter="url(#lkBrush)"/>
-  <rect x="2.5" y="2.5" width="295" height="395" rx="25.5" fill="none" stroke="#fff" stroke-opacity=".8"/>
-  <rect x="1" y="1" width="298" height="398" rx="27" fill="none" stroke="#7d838a" stroke-opacity=".6"/>
-  <rect x="34" y="34" width="270" height="186" rx="8" fill="url(#lkWell)"/>
-  <rect x="40" y="40" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="40" y="40" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="41.5" y="41.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="70" y="40" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="70" y="40" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="71.5" y="41.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="100" y="40" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="100" y="40" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="101.5" y="41.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="130" y="40" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="130" y="40" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="131.5" y="41.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="160" y="40" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="160" y="40" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="161.5" y="41.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="190" y="40" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="190" y="40" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="191.5" y="41.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="220" y="40" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="220" y="40" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="221.5" y="41.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="250" y="40" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="250" y="40" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="251.5" y="41.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="280" y="40" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="280" y="40" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="281.5" y="41.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="47" y="70" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="47" y="70" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="48.5" y="71.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="77" y="70" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="77" y="70" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="78.5" y="71.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="107" y="70" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="107" y="70" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="108.5" y="71.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="137" y="70" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="137" y="70" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="138.5" y="71.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="167" y="70" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="167" y="70" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="168.5" y="71.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="197" y="70" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="197" y="70" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="198.5" y="71.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="227" y="70" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="227" y="70" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="228.5" y="71.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="257" y="70" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="257" y="70" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="258.5" y="71.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="287" y="70" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="287" y="70" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="288.5" y="71.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="54" y="100" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="54" y="100" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="55.5" y="101.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="84" y="100" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="84" y="100" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="85.5" y="101.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="114" y="100" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="114" y="100" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="115.5" y="101.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="144" y="100" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="144" y="100" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="145.5" y="101.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="174" y="100" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="174" y="100" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="175.5" y="101.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="204" y="100" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="204" y="100" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="205.5" y="101.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="234" y="100" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="234" y="100" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="235.5" y="101.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="264" y="100" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="264" y="100" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="265.5" y="101.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="294" y="100" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="294" y="100" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="295.5" y="101.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="40" y="130" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="40" y="130" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="41.5" y="131.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="70" y="130" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="70" y="130" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="71.5" y="131.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="100" y="130" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="100" y="130" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="101.5" y="131.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="130" y="130" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="130" y="130" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="131.5" y="131.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="160" y="130" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="160" y="130" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="161.5" y="131.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="190" y="130" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="190" y="130" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="191.5" y="131.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="220" y="130" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="220" y="130" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="221.5" y="131.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="250" y="130" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="250" y="130" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="251.5" y="131.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="280" y="130" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="280" y="130" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="281.5" y="131.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="47" y="160" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="47" y="160" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="48.5" y="161.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="77" y="160" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="77" y="160" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="78.5" y="161.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="107" y="160" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="107" y="160" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="108.5" y="161.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="137" y="160" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="137" y="160" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="138.5" y="161.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="167" y="160" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="167" y="160" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="168.5" y="161.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="197" y="160" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="197" y="160" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="198.5" y="161.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="227" y="160" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="227" y="160" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="228.5" y="161.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="257" y="160" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="257" y="160" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="258.5" y="161.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="287" y="160" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="287" y="160" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="288.5" y="161.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="54" y="190" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="54" y="190" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="55.5" y="191.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="84" y="190" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="84" y="190" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="85.5" y="191.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="114" y="190" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="114" y="190" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="115.5" y="191.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="144" y="190" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="144" y="190" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="145.5" y="191.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="174" y="190" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="174" y="190" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="175.5" y="191.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="204" y="190" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="204" y="190" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="205.5" y="191.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="234" y="190" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="234" y="190" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="235.5" y="191.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="264" y="190" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="264" y="190" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="265.5" y="191.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/><rect x="294" y="190" width="26" height="26" rx="4" fill="url(#lkKey)"/><rect x="294" y="190" width="26" height="26" rx="4" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".7"/><rect x="295.5" y="191.2" width="23" height="10" rx="3" fill="#fff" opacity=".06"/>
-  <rect x="80" y="246" width="250" height="150" rx="14" fill="url(#lkPad)"/>
-  <rect x="80" y="246" width="250" height="150" rx="14" fill="none" stroke="#8a9097" stroke-opacity=".55"/>
-  <path d="M2 30 Q2 2 30 2 L200 2 L20 380 Q2 380 2 360z" fill="#fff" opacity=".12"/>
-</svg>
-      <div class="paper">
-        <div class="ph"><span class="plogo"></span><span>Global Trade<br>Compliance<br>Solutions</span></div>
-        <h3>Trade Personality<br>Classification Report</h3>
-        <div class="gl"></div>
-        <dl>
-          <dt>HTS Number</dt><dd>9014.10.90.00</dd>
-          <dt>Section</dt><dd>XVIII</dd>
-          <dt>Chapter</dt><dd>90</dd>
-          <dt>Heading</dt><dd>9014</dd>
-          <dt>Subheading</dt><dd>9014.10</dd>
-          <dt>Product Description</dt><dd style="font-family:var(--f-ui)">Direction-finding compasses</dd>
-        </dl>
-        <div class="gl"></div>
-        <div class="pc"><small>Personality Classification:</small><div><b>THE COMPASS</b><i>ESSENTIAL CHARACTER&trade;</i></div></div>
-        <div class="gl"></div>
-        <div class="cols">
-          <div><h4>Chapter Information</h4><p>Chapter 90. Optical, photographic, cinematographic, measuring, checking, precision, medical or surgical instruments and apparatus</p></div>
-        </div>
-      </div>
-<svg class="compass3d" viewBox="0 0 220 240" aria-hidden="true">
-  <defs>
-    <radialGradient id="cpCase" cx="35%" cy="28%" r="85%"><stop offset="0" stop-color="#fff4c4"/><stop offset=".22" stop-color="#ecc865"/><stop offset=".55" stop-color="#b8862a"/><stop offset=".85" stop-color="#7b5414"/><stop offset="1" stop-color="#4f350a"/></radialGradient>
-    <linearGradient id="cpBevelA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0b5"/><stop offset=".5" stop-color="#c79a3a"/><stop offset="1" stop-color="#5e400c"/></linearGradient>
-    <linearGradient id="cpBevelB" x1="1" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#fbe5a0"/><stop offset=".5" stop-color="#b48528"/><stop offset="1" stop-color="#4a3208"/></linearGradient>
-    <radialGradient id="cpFace" cx="45%" cy="38%" r="75%"><stop offset="0" stop-color="#2e5568"/><stop offset=".7" stop-color="#173546"/><stop offset="1" stop-color="#0a1d27"/></radialGradient>
-    <linearGradient id="cpStar" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0b8"/><stop offset=".5" stop-color="#dcb257"/><stop offset="1" stop-color="#9a6f1c"/></linearGradient>
-    <linearGradient id="cpStarD" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b98a2a"/><stop offset="1" stop-color="#6d4b10"/></linearGradient>
-    <radialGradient id="cpGlass" cx="30%" cy="25%" r="70%"><stop offset="0" stop-color="#fff" stop-opacity=".38"/><stop offset=".35" stop-color="#fff" stop-opacity=".06"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
-    <radialGradient id="cpInnerShadow" cx="50%" cy="50%" r="50%"><stop offset=".8" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".55"/></radialGradient>
-  </defs>
-  <g>
-    <path d="M110 8 a20 20 0 1 1 -0.1 0z M110 15 a13 13 0 1 0 0.1 0z" fill="url(#cpBevelA)" fill-rule="evenodd"/>
-    <path d="M110 8 a20 20 0 0 1 17 9" fill="none" stroke="#fff7d6" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
-    <rect x="101" y="38" width="18" height="12" rx="3" fill="url(#cpBevelB)"/>
-    <rect x="98" y="30" width="24" height="10" rx="4" fill="url(#cpCase)"/>
-    <rect x="98" y="30" width="24" height="10" rx="4" fill="none" stroke="#4a3208" stroke-opacity=".5" stroke-width=".7"/>
-  </g>
-  <circle cx="110" cy="130" r="93" fill="url(#cpCase)"/>
-  <g stroke="#5a3d0b" stroke-opacity=".55" stroke-width="1.6"><line x1="110.0" y1="44.0" x2="110.0" y2="39.0"/><line x1="116.0" y1="44.2" x2="116.3" y2="39.2"/><line x1="122.0" y1="44.8" x2="122.7" y2="39.9"/><line x1="127.9" y1="45.9" x2="128.9" y2="41.0"/><line x1="133.7" y1="47.3" x2="135.1" y2="42.5"/><line x1="139.4" y1="49.2" x2="141.1" y2="44.5"/><line x1="145.0" y1="51.4" x2="147.0" y2="46.9"/><line x1="150.4" y1="54.1" x2="152.7" y2="49.7"/><line x1="155.6" y1="57.1" x2="158.2" y2="52.8"/><line x1="160.5" y1="60.4" x2="163.5" y2="56.4"/><line x1="165.3" y1="64.1" x2="168.5" y2="60.3"/><line x1="169.7" y1="68.1" x2="173.2" y2="64.5"/><line x1="173.9" y1="72.5" x2="177.6" y2="69.1"/><line x1="177.8" y1="77.1" x2="181.7" y2="74.0"/><line x1="181.3" y1="81.9" x2="185.4" y2="79.1"/><line x1="184.5" y1="87.0" x2="188.8" y2="84.5"/><line x1="187.3" y1="92.3" x2="191.8" y2="90.1"/><line x1="189.7" y1="97.8" x2="194.4" y2="95.9"/><line x1="191.8" y1="103.4" x2="196.5" y2="101.9"/><line x1="193.4" y1="109.2" x2="198.3" y2="108.0"/><line x1="194.7" y1="115.1" x2="199.6" y2="114.2"/><line x1="195.5" y1="121.0" x2="200.5" y2="120.5"/><line x1="195.9" y1="127.0" x2="200.9" y2="126.8"/><line x1="195.9" y1="133.0" x2="200.9" y2="133.2"/><line x1="195.5" y1="139.0" x2="200.5" y2="139.5"/><line x1="194.7" y1="144.9" x2="199.6" y2="145.8"/><line x1="193.4" y1="150.8" x2="198.3" y2="152.0"/><line x1="191.8" y1="156.6" x2="196.5" y2="158.1"/><line x1="189.7" y1="162.2" x2="194.4" y2="164.1"/><line x1="187.3" y1="167.7" x2="191.8" y2="169.9"/><line x1="184.5" y1="173.0" x2="188.8" y2="175.5"/><line x1="181.3" y1="178.1" x2="185.4" y2="180.9"/><line x1="177.8" y1="182.9" x2="181.7" y2="186.0"/><line x1="173.9" y1="187.5" x2="177.6" y2="190.9"/><line x1="169.7" y1="191.9" x2="173.2" y2="195.5"/><line x1="165.3" y1="195.9" x2="168.5" y2="199.7"/><line x1="160.5" y1="199.6" x2="163.5" y2="203.6"/><line x1="155.6" y1="202.9" x2="158.2" y2="207.2"/><line x1="150.4" y1="205.9" x2="152.7" y2="210.3"/><line x1="145.0" y1="208.6" x2="147.0" y2="213.1"/><line x1="139.4" y1="210.8" x2="141.1" y2="215.5"/><line x1="133.7" y1="212.7" x2="135.1" y2="217.5"/><line x1="127.9" y1="214.1" x2="128.9" y2="219.0"/><line x1="122.0" y1="215.2" x2="122.7" y2="220.1"/><line x1="116.0" y1="215.8" x2="116.3" y2="220.8"/><line x1="110.0" y1="216.0" x2="110.0" y2="221.0"/><line x1="104.0" y1="215.8" x2="103.7" y2="220.8"/><line x1="98.0" y1="215.2" x2="97.3" y2="220.1"/><line x1="92.1" y1="214.1" x2="91.1" y2="219.0"/><line x1="86.3" y1="212.7" x2="84.9" y2="217.5"/><line x1="80.6" y1="210.8" x2="78.9" y2="215.5"/><line x1="75.0" y1="208.6" x2="73.0" y2="213.1"/><line x1="69.6" y1="205.9" x2="67.3" y2="210.3"/><line x1="64.4" y1="202.9" x2="61.8" y2="207.2"/><line x1="59.5" y1="199.6" x2="56.5" y2="203.6"/><line x1="54.7" y1="195.9" x2="51.5" y2="199.7"/><line x1="50.3" y1="191.9" x2="46.8" y2="195.5"/><line x1="46.1" y1="187.5" x2="42.4" y2="190.9"/><line x1="42.2" y1="182.9" x2="38.3" y2="186.0"/><line x1="38.7" y1="178.1" x2="34.6" y2="180.9"/><line x1="35.5" y1="173.0" x2="31.2" y2="175.5"/><line x1="32.7" y1="167.7" x2="28.2" y2="169.9"/><line x1="30.3" y1="162.2" x2="25.6" y2="164.1"/><line x1="28.2" y1="156.6" x2="23.5" y2="158.1"/><line x1="26.6" y1="150.8" x2="21.7" y2="152.0"/><line x1="25.3" y1="144.9" x2="20.4" y2="145.8"/><line x1="24.5" y1="139.0" x2="19.5" y2="139.5"/><line x1="24.1" y1="133.0" x2="19.1" y2="133.2"/><line x1="24.1" y1="127.0" x2="19.1" y2="126.8"/><line x1="24.5" y1="121.0" x2="19.5" y2="120.5"/><line x1="25.3" y1="115.1" x2="20.4" y2="114.2"/><line x1="26.6" y1="109.2" x2="21.7" y2="108.0"/><line x1="28.2" y1="103.4" x2="23.5" y2="101.9"/><line x1="30.3" y1="97.8" x2="25.6" y2="95.9"/><line x1="32.7" y1="92.3" x2="28.2" y2="90.1"/><line x1="35.5" y1="87.0" x2="31.2" y2="84.5"/><line x1="38.7" y1="81.9" x2="34.6" y2="79.1"/><line x1="42.2" y1="77.1" x2="38.3" y2="74.0"/><line x1="46.1" y1="72.5" x2="42.4" y2="69.1"/><line x1="50.3" y1="68.1" x2="46.8" y2="64.5"/><line x1="54.7" y1="64.1" x2="51.5" y2="60.3"/><line x1="59.5" y1="60.4" x2="56.5" y2="56.4"/><line x1="64.4" y1="57.1" x2="61.8" y2="52.8"/><line x1="69.6" y1="54.1" x2="67.3" y2="49.7"/><line x1="75.0" y1="51.4" x2="73.0" y2="46.9"/><line x1="80.6" y1="49.2" x2="78.9" y2="44.5"/><line x1="86.3" y1="47.3" x2="84.9" y2="42.5"/><line x1="92.1" y1="45.9" x2="91.1" y2="41.0"/><line x1="98.0" y1="44.8" x2="97.3" y2="39.9"/><line x1="104.0" y1="44.2" x2="103.7" y2="39.2"/></g>
-  <circle cx="110" cy="130" r="93" fill="none" stroke="#3f2a06" stroke-opacity=".5"/>
-  <circle cx="110" cy="130" r="84" fill="url(#cpBevelA)"/>
-  <circle cx="110" cy="130" r="78" fill="url(#cpBevelB)"/>
-  <circle cx="110" cy="130" r="73" fill="url(#cpFace)"/>
-  <circle cx="110" cy="130" r="66" fill="none" stroke="#efe2b4" stroke-width="6" stroke-dasharray=".9 2.556" opacity=".55"/>
-  <circle cx="110" cy="130" r="66" fill="none" stroke="#efe2b4" stroke-width="9" stroke-dasharray="1.6 15.68" stroke-dashoffset=".8" opacity=".9"/>
-  <circle cx="110" cy="130" r="60.5" fill="none" stroke="#d8b763" stroke-width=".7" opacity=".7"/>
-  <g fill="#d7c48c" font-family="Georgia,serif" font-size="6.5" text-anchor="middle"><text x="136.5" y="86.7" transform="rotate(30 136.5 84.1)">30</text><text x="155.9" y="106.1" transform="rotate(60 155.9 103.5)">60</text><text x="155.9" y="159.1" transform="rotate(120 155.9 156.5)">120</text><text x="136.5" y="178.5" transform="rotate(150 136.5 175.9)">150</text><text x="83.5" y="178.5" transform="rotate(210 83.5 175.9)">210</text><text x="64.1" y="159.1" transform="rotate(240 64.1 156.5)">240</text><text x="64.1" y="106.1" transform="rotate(300 64.1 103.5)">300</text><text x="83.5" y="86.7" transform="rotate(330 83.5 84.1)">330</text></g>
-  <g fill="#f3d98c" font-family="Georgia,serif" font-size="15" font-weight="700" text-anchor="middle">
-    <text x="110" y="90">N</text><text x="110" y="181">S</text><text x="155" y="135">E</text><text x="65" y="135">W</text>
-  </g>
-  <g transform="translate(110 130)">
-    <g transform="rotate(45)" opacity=".85">
-      <polygon points="0,-30 5,-5 0,0" fill="url(#cpStar)"/><polygon points="0,-30 -5,-5 0,0" fill="url(#cpStarD)"/>
-      <polygon points="0,30 5,5 0,0" fill="url(#cpStarD)"/><polygon points="0,30 -5,5 0,0" fill="url(#cpStar)"/>
-      <polygon points="30,0 5,5 0,0" fill="url(#cpStar)"/><polygon points="30,0 5,-5 0,0" fill="url(#cpStarD)"/>
-      <polygon points="-30,0 -5,5 0,0" fill="url(#cpStarD)"/><polygon points="-30,0 -5,-5 0,0" fill="url(#cpStar)"/>
-    </g>
-    <polygon points="0,-36 7,-7 0,0" fill="url(#cpStar)"/><polygon points="0,-36 -7,-7 0,0" fill="url(#cpStarD)"/>
-    <polygon points="0,36 7,7 0,0" fill="url(#cpStarD)"/><polygon points="0,36 -7,7 0,0" fill="url(#cpStar)"/>
-    <polygon points="36,0 7,7 0,0" fill="url(#cpStar)"/><polygon points="36,0 7,-7 0,0" fill="url(#cpStarD)"/>
-    <polygon points="-36,0 -7,7 0,0" fill="url(#cpStarD)"/><polygon points="-36,0 -7,-7 0,0" fill="url(#cpStar)"/>
-    <g transform="rotate(18)" style="filter:drop-shadow(1.5px 3px 1.5px rgba(0,0,0,.55))">
-      <polygon points="0,-54 4.2,0 -4.2,0" fill="#b4322a"/><polygon points="0,-54 0,0 -4.2,0" fill="#8c2219"/>
-      <polygon points="0,54 4.2,0 -4.2,0" fill="#e9e4d6"/><polygon points="0,54 0,0 -4.2,0" fill="#bdb6a3"/>
-    </g>
-    <circle r="7" fill="url(#cpCase)"/><circle r="7" fill="none" stroke="#4a3208" stroke-opacity=".6" stroke-width=".7"/><circle r="2.2" cx="-1.5" cy="-1.5" fill="#fff6d0" opacity=".9"/>
-  </g>
-  <circle cx="110" cy="130" r="73" fill="url(#cpInnerShadow)"/>
-  <circle cx="110" cy="130" r="73" fill="url(#cpGlass)"/>
-  <path d="M52 102 A64 64 0 0 1 100 64" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".28"/>
-  <path d="M160 176 A70 70 0 0 1 130 196" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".18"/>
-  <path d="M30 82 A93 93 0 0 1 80 42" fill="none" stroke="#fff8dc" stroke-width="2.4" stroke-linecap="round" opacity=".7"/>
-</svg>
-    </div></div>
-    <div class="intro">
-      <div class="eyebrow">Take the Trade Personality Classification Quiz &middot; 5 minutes</div>
-      <div class="rule"></div>
+  <section class="landing">
+    <div>
       <h1 class="hero-h">Trade professionals classify products every day.</h1>
       <p class="hero-h2">Today, the tariff schedule classifies you.</p>
-      <p class="lede">Answer 10 questions about how you approach risk, compliance, problem-solving, and trade decisions. You'll be classified as one of six official trade personalities:</p>
-      <p class="six">Compass. Microscope. Calculator. Scale. Vault. Fire Extinguisher.</p>
-      <p class="lede">Each classification comes with its own HTS number, trade superpower, strengths, and blind spots.</p>
-      <div class="cta-row">
-        <button class="btn btn-gold" id="go">Get classified <span aria-hidden="true">&rarr;</span></button>
-        <p class="fine">Your results appear immediately after the last question.<br>Love your classification? Claim your GHY trade personality sticker.</p>
-      </div>
+      <p class="meta">10 questions. 5 minutes.</p>
+      <button class="btn btn-gold" id="go">Get classified <span aria-hidden="true">&rarr;</span></button>
+    </div>
+    <div class="pending" aria-hidden="true">
+      <div class="rt">Trade Personality<br>Classification Report</div>
+      <dl><dt>HTS Number</dt><dd>&#9608;&#9608;&#9608;&#9608;.&#9608;&#9608;.&#9608;&#9608;.&#9608;&#9608;</dd><dt>Classification</dt><dd>&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;</dd></dl>
+      <span class="stamp">Pending review</span>
     </div>
   </section>`;
-  document.getElementById("go").onclick = () => { answers.fill(null); idx = 0; quizShell(); };
-  fitScene();
+  document.getElementById("go").onclick = startQuiz;
 }
 
 function quizShell(){
@@ -687,7 +557,13 @@ function pick(j, btn){
   setTimeout(()=>{
     busy = false;
     if(idx < Q.length-1){ idx++; renderQ("r"); }
-    else { result = classify(); showResult(result); }
+    else {
+      result = classify();
+      store.set("localStorage","ec_result",P[result].key);
+      setURL("?r="+P[result].key);
+      track("quiz_complete",P[result].key);
+      showResult(result);
+    }
   }, 480);
 }
 function goBack(){
@@ -710,28 +586,57 @@ function disclaimer(p){
   return `Essential Character&trade; by GHY International. The personality classification is a creative campaign concept inspired by tariff classification. The product code above is an illustrative reference for ${esc(p.img.toLowerCase())} and is not a CBP ruling or a legal classification of the quiz taker.`;
 }
 
-function showResult(t, fromIndex){
-  const p = P[t];
-  const head = p.rows[2][0].split(" ")[1];
-  app.innerHTML = `
+const LI_SVG = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.124 2.062 2.062 0 0 1 0 4.124zM7.119 20.452H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>`;
+const hero = (p, eyebrow, extra) => `
   <section class="res-hero">
     <div>
-      <div class="eyebrow">${fromIndex && t!==result ? "Trade Personality Classification" : "Official Trade Personality Classification"}</div>
+      <div class="eyebrow">${eyebrow}</div>
       <h1>${p.hts}</h1>
       <div class="hts">${p.name}</div>
-      <p class="prod">${esc(p.prod)}</p>
-      <div class="chips"><span class="chip"><b>Attribute</b>${p.attr}</span><span class="chip"><b>Superpower</b>${p.power}</span></div>
+      <div class="power-line"><small>Trade superpower</small><b>${p.power}</b></div>
+      ${extra||""}
     </div>
     <div class="big-glyph" role="img" aria-label="${esc(p.img)}">${p.glyph}</div>
   </section>
+  <section class="flw"><h2>Famous last words</h2><ul>${p.last.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></section>`;
+
+function showResult(t, fromIndex){
+  const p = P[t], mine = t===result;
+  const head = p.rows[2][0].split(" ")[1];
+  const shareRow = mine ? `<div class="share-row">
+        <button class="btn btn-li" type="button" id="sh">${LI_SVG}Share on LinkedIn</button>
+        <button class="challenge" type="button" id="team">Challenge your team</button>
+      </div><p class="fine share-note" id="sharenote" role="status" hidden></p>` : "";
+  app.innerHTML = `
+  ${hero(p, fromIndex && !mine ? "Trade Personality Classification" : "Official Trade Personality Classification", shareRow)}
+
+  <section class="sec">
+    <h2>Personality Interpretation</h2>
+    <div class="pi-lead">
+      <div class="prose belief">
+        <small>Core belief</small><b>${esc(p.belief)}</b>
+        <div class="eyebrow">How you see trade &middot; ${p.attr}</div>
+        ${p.how.map(x=>`<p>${esc(x)}</p>`).join("")}
+      </div>
+    </div>
+    <div class="pi-grid">
+      <div class="box pi-str"><h3>Strengths</h3>${ul(p.str)}</div>
+      <div class="box pi-blind"><h3>Blind spots</h3>${ul(p.blind)}</div>
+      <div class="box"><h3>Essential characteristics</h3>${ul(p.enl)}</div>
+    </div>
+  </section>
+
+  ${mine ? `<section class="sticker" id="sticker">${stickerHTML()}</section>` : ""}
 
   <section class="sec">
     <h2>Tariff Classification Record</h2>
-    <div class="tbl-wrap"><table>
-      <thead><tr><th>HTS Level</th><th>Official Description</th></tr></thead>
-      <tbody>${p.rows.slice(0,2).map(r=>`<tr><td>${r[0]}</td><td>${esc(r[1])}</td></tr>`).join("")}</tbody>
-    </table></div>
-    <details class="hts-full" open><summary><span>Full HTSUS Number</span><span class="num">${p.hts}</span></summary>
+    <details class="hts-full"><summary><span>Tariff Table</span></summary>
+      <div class="tbl-wrap" style="margin:0;border:0;border-radius:0"><table>
+        <thead><tr><th>HTS Level</th><th>Official Description</th></tr></thead>
+        <tbody>${p.rows.slice(0,2).map(r=>`<tr><td>${r[0]}</td><td>${esc(r[1])}</td></tr>`).join("")}</tbody>
+      </table></div>
+    </details>
+    <details class="hts-full"><summary><span>Full HTSUS Number</span><span class="num">${p.hts}</span></summary>
       <div class="sched-wrap"><table class="sched">
         <thead>
           <tr><th rowspan="2">Heading/ Subheading</th><th rowspan="2">Stat. Suffix</th><th rowspan="2">Article Description</th><th rowspan="2">Unit of Quantity</th><th colspan="3" class="grp">Rates of Duty</th></tr>
@@ -748,70 +653,68 @@ function showResult(t, fromIndex){
     </details>
   </section>
 
-  <section class="sec">
-    <h2>Personality Interpretation</h2>
-    <div class="pi-lead">
-      <div class="prose belief">
-        <small>Core belief</small><b>${esc(p.belief)}</b>
-        <div class="eyebrow">How you see trade &middot; ${p.attr}</div>
-        ${p.how.map(x=>`<p>${esc(x)}</p>`).join("")}
-      </div>
-      <div class="power"><small>Your trade superpower</small><b>${p.power}</b></div>
-    </div>
-    <div class="pi-grid">
-      <div class="box pi-str"><h3>Strengths</h3>${ul(p.str)}</div>
-      <div class="box pi-blind"><h3>Blind spots</h3>${ul(p.blind)}</div>
-      <div class="box"><h3>Essential characteristics</h3>${ul(p.enl)}</div>
-      <div class="box quote"><h3>Famous last words</h3>${ul(p.last)}</div>
-    </div>
-  </section>
-
-  ${t===result ? `<section class="sticker" id="sticker">${stickerHTML(p)}</section>` : ""}
-
   <div class="foot-links">
     <button class="link" id="all">See all six trade personalities</button>
     <button class="link" id="again">Take the quiz again</button>
-    ${fromIndex && result && t!==result ? `<button class="link" id="mine">Back to my result</button>` : ""}
+    ${fromIndex && result && !mine ? `<button class="link" id="mine">Back to my result</button>` : ""}
   </div>
   <p class="disclaimer">${disclaimer(p)}</p>`;
   wireCommon();
-  if(t===result) wireSticker(p);
+  if(mine){ wireForm(p); wireShare(p); }
+  top0();
+}
+
+/* What someone sees after clicking a shared link: the teaser, then straight to the quiz. */
+function visitorPage(t){
+  const p = P[t], article = /^[AEIOU]/.test(p.name.replace("The ","")) ? "an" : "a";
+  app.innerHTML = `
+  ${hero(p,"A colleague was classified as")}
+  <section class="visit-cta">
+    <h2>Your turn. How does the tariff schedule classify you?</h2>
+    <p>Are you ${article} ${esc(p.name.replace("The ",""))} too? 10 questions. 5 minutes.</p>
+    <button class="btn btn-gold" id="go">Get classified <span aria-hidden="true">&rarr;</span></button>
+  </section>
+  <p class="disclaimer">${disclaimer(p)}</p>`;
+  document.getElementById("go").onclick = startQuiz;
   top0();
 }
 
 function wireCommon(){
   document.getElementById("all").onclick = indexPage;
-  document.getElementById("again").onclick = () => { result=null; answers.fill(null); idx=0; quizShell(); top0(); };
+  document.getElementById("again").onclick = startQuiz;
   const m = document.getElementById("mine"); if(m) m.onclick = () => showResult(result);
 }
 
-const QUIZ_URL = "https://www.ghy.com/trade-guides/ghy-trade-personality-quiz/";
 const PD_FORM = "https://webforms.pipedrive.com/f/1wXLtJk9dGXJ0feZOLKO8lVXZzyz4jVTxiNArfl3d8W6RxHXVRWChmmlwZzlMs4M3";
 
-function stickerHTML(p){
-  const badge = `<div class="stk">${p.hts}</div>`;
-  return `${badge}<div>
-    <h2>Get Your Audit Trail and Claim Your Sticker</h2>
-    <p>Complete the form to get your full classification report, plus an Essential Character&trade; sticker for your desk.</p>
+function stickerHTML(){
+  return `<h2>Want the sticker? Tell us where to send it.</h2>
     <div class="pipedriveWebForms" id="pdform" data-pd-webforms="${PD_FORM}"></div>
-    <p class="fine pd-fallback">Form not loading? <a href="${PD_FORM}" target="_blank" rel="noopener">Open it in a new tab</a>.</p>
-    <h3 style="margin-top:22px;font-size:1rem">While you're here</h3>
-    <div class="thanks-grid">
-      <div class="box"><h3>Share your trade personality</h3><p>Let your network know how you were classified.</p><button class="btn btn-brand" type="button" id="sh">Share on LinkedIn</button><p class="fine share-note" id="sharenote" role="status" hidden></p></div>
-      <div class="box"><h3>Explore all six</h3><p>See how the rest of your team might be classified.</p><button class="btn btn-ghost" type="button" id="ex">View personalities</button></div>
-    </div>
-    <div id="sharecard" hidden>
-      <div class="social" role="img" aria-label="Share graphic for ${esc(p.name)}">
-        <div><small>Essential Character&trade;</small><b style="font-size:clamp(1.7rem,4vw,2.3rem);font-variant-numeric:tabular-nums;color:#fff;margin-top:10px">${p.hts}</b><small class="g" style="font-size:1rem;letter-spacing:.04em;text-transform:none;font-weight:700">${p.name}</small>
-        <small class="g" style="margin-top:12px">Trade superpower</small><b style="font-size:1.05rem">${p.power.toUpperCase()}</b><i>${esc(p.belief)}</i></div>
-        <div>${p.glyph}</div>
-      </div>
-      <p class="fine" style="margin-top:8px">Share graphic preview. What's your trade personality? Take the quiz &rarr;</p>
-    </div>
-  </div>`;
+    <p class="fine pd-fallback">Form not loading? <a href="${PD_FORM}" target="_blank" rel="noopener">Open it in a new tab</a>.</p>`;
 }
 
-function wireSticker(p){
+const showSent = () => {
+  const s = document.getElementById("sticker");
+  if(s) s.innerHTML = `<h2>Your sticker is on its way.</h2><p class="sent">Thanks. We have your details.</p>`;
+};
+function formSubmitted(key){
+  const flag = "ec_sent_"+key;
+  if(store.get("sessionStorage",flag)) return;
+  store.set("sessionStorage",flag,"1");
+  track("quiz_form_submit",key);
+}
+/* The Pipedrive form is a cross-site frame. A click into it blurs this window, which is the form start.
+   The form's redirect (thanks.html) reports the submission back here. */
+let formStarted = false;
+addEventListener("blur",()=>setTimeout(()=>{
+  const a = document.activeElement;
+  if(!formStarted && result && a && a.tagName==="IFRAME" && a.closest("#pdform")){ formStarted = true; track("quiz_form_start",P[result].key); }
+},0));
+addEventListener("message",e=>{
+  if(e.origin===location.origin && e.data==="ec_form_submit" && result){ formSubmitted(P[result].key); showSent(); }
+});
+
+function wireForm(p){
   const pd = document.getElementById("pdform");
   // Pipedrive's loader builds the form. If it has not done so shortly after this screen renders, frame the form directly.
   const frameForm = () => {
@@ -828,31 +731,37 @@ function wireSticker(p){
   loader.onerror = frameForm;
   pd.appendChild(loader);
   setTimeout(frameForm, 2500);
-  const sh = document.getElementById("sh");
-  if(sh){
-    const img = `share/${p.key}.png`, name = `essential-character-${p.key}.png`;
-    const caption = `I was classified as ${p.name} (HTS ${p.hts}) in GHY's Trade Personality Classification Quiz.\n\nWhat's your trade personality? Take the quiz: ${QUIZ_URL}`;
-    let file = null;
-    fetch(img).then(r=>r.ok?r.blob():null).then(b=>{ if(b) file = new File([b],name,{type:"image/png"}); }).catch(()=>{});
-    sh.onclick = async () => {
-      document.getElementById("sharecard").hidden = false;
-      const note = document.getElementById("sharenote");
-      // Phones: send the image and caption to the LinkedIn app through the device share sheet.
-      if(navigator.clipboard) navigator.clipboard.writeText(caption).catch(()=>{});
-      if(matchMedia("(pointer:coarse)").matches && file && navigator.canShare && navigator.canShare({files:[file]})){
-        try { await navigator.share({files:[file],text:caption}); note.textContent = "If your caption is empty, paste it in. We copied it for you."; note.hidden = false; return; }
-        catch(err){ if(err.name==="AbortError") return; }
-      }
-      // Desktop: LinkedIn cannot accept an image through a link, so save it and open the post window with the caption.
-      window.open("https://www.linkedin.com/feed/?shareActive=true&text="+encodeURIComponent(caption),"_blank","noopener");
-      const a = document.createElement("a");
-      a.href = img; a.download = name; document.body.appendChild(a); a.click(); a.remove();
-      note.textContent = "Your graphic has downloaded. In LinkedIn, add it to your post with the photo icon. Your caption and quiz link are copied too, so paste them in if they aren't already there.";
-      note.hidden = false;
-    };
-  }
-  const ex = document.getElementById("ex");
-  if(ex) ex.onclick = indexPage;
+}
+
+function wireShare(p){
+  const note = document.getElementById("sharenote");
+  const say = m => { note.textContent = m; note.hidden = false; };
+  const copy = async txt => { try { await navigator.clipboard.writeText(txt); return true; } catch(e){ return false; } };
+  const phone = matchMedia("(pointer:coarse)").matches && navigator.share;
+  const link = src => `${QUIZ_URL}share/${p.key}.html${src?"?src="+src:""}`;
+  const short = n => n.replace("The ","");
+  const a = short(p.name), t = P[p.tag];
+  const caption = `I was classified as ${p.name} (HTS ${p.hts}) in GHY's Trade Personality Classification Quiz.\n\nI'm a ${a}. Tag the ${short(t.name)} on your team.\n\nWhat's your trade personality? ${link()}`;
+  document.getElementById("sh").onclick = async () => {
+    track("quiz_share",p.key,{share_method:"linkedin"});
+    copy(caption);
+    if(phone){
+      try { await navigator.share({text:caption}); return; }
+      catch(err){ if(err.name==="AbortError") return; }
+    }
+    window.open("https://www.linkedin.com/feed/?shareActive=true&text="+encodeURIComponent(caption),"_blank","noopener");
+    say("LinkedIn is open with your post ready. If the text is blank, paste it in. We copied it for you.");
+  };
+  document.getElementById("team").onclick = async () => {
+    const msg = `I was classified as ${p.name} in GHY's trade personality quiz. What's yours? ${link("team")}`;
+    track("quiz_share",p.key,{share_method:"team"});
+    if(phone){
+      try { await navigator.share({text:msg}); return; }
+      catch(err){ if(err.name==="AbortError") return; }
+    }
+    if(await copy(msg)) say("Challenge copied. Paste it into Teams, Slack or an email.");
+    else location.href = "mailto:?subject="+encodeURIComponent("What's your trade personality?")+"&body="+encodeURIComponent(msg);
+  };
 }
 
 function indexPage(){
@@ -867,20 +776,29 @@ function indexPage(){
   </div>
   <p class="disclaimer">Essential Character&trade; is a creative educational campaign by GHY International inspired by tariff classification. The personality result and associated HTSUS reference are illustrative and do not constitute a U.S. Customs and Border Protection (CBP) binding ruling, legal advice or a determination of the classification of any specific imported product.</p>`;
   app.querySelectorAll(".icard").forEach(b=>b.onclick=()=>showResult(b.dataset.t,true));
-  document.getElementById("again").onclick = () => { result=null; answers.fill(null); idx=0; quizShell(); top0(); };
+  document.getElementById("again").onclick = startQuiz;
   const m = document.getElementById("mine"); if(m) m.onclick = () => showResult(result);
   top0();
 }
 
-function fitScene(){
-  const d=document.querySelector(".desk"); if(!d) return;
-  const rig=d.querySelector(".rig");
-  const mob=matchMedia("(max-width:820px)").matches;
-  if(mob){ const k=Math.min(.85,d.clientWidth/480); rig.style.setProperty("--k",k.toFixed(3)); d.style.paddingBottom=Math.round(500*k)+"px"; }
-  else { d.style.paddingBottom=""; rig.style.setProperty("--k",Math.min(1,d.clientHeight/640).toFixed(3)); }
+function boot(){
+  const visit = keyToT(qs.get("v")), mine = keyToT(qs.get("r"));
+  if(visit){
+    const key = P[visit].key, src = qs.get("src") || "linkedin";
+    ref = {personality:key, source:src};
+    store.set("sessionStorage","ec_ref",JSON.stringify(ref));
+    if(!store.get("sessionStorage","ec_visit_"+key)){
+      store.set("sessionStorage","ec_visit_"+key,"1");
+      track("quiz_shared_visit",key);
+    }
+    visitorPage(visit);
+  } else if(mine){
+    result = mine;
+    showResult(mine);
+    if(qs.get("sent")){ formSubmitted(P[mine].key); setURL("?r="+P[mine].key); showSent(); }
+  } else landing();
 }
-addEventListener("resize",fitScene);
-landing();
+boot();
 </script>
 
 </body></html>
