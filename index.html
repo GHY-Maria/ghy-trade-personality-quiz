@@ -769,7 +769,7 @@ function wireShare(p){
   const short = n => n.replace("The ","");
   const a = short(p.name), t = P[p.tag];
   /* Tagged ghy.com link: GA4 reads it to count visits and new quiz starts from each share, by personality. */
-  const tagged = src => `${QUIZ_URL}?utm_source=${src}&utm_medium=quiz_share&utm_campaign=essential_character&utm_content=${p.key}`;
+  const tagged = src => `${QUIZ_URL}?ec=${p.key}&utm_source=${src}&utm_medium=quiz_share&utm_campaign=essential_character&utm_content=${p.key}`;
   const caption = `I was classified as ${p.name} (HTS ${p.hts}) in GHY's Essential Character™ Trade Personality Quiz.\n\nI'm a ${a}. Tag the ${short(t.name)} on your team.\n\nWhat's your trade personality? ${tagged("linkedin")}`;
   const subject = "What's your trade personality?";
   const intro = `I was classified as ${p.name} (HTS ${p.hts}) in GHY's Essential Character™ Trade Personality Quiz. What's yours?`;
@@ -789,12 +789,6 @@ function wireShare(p){
     };
     img.src = URL.createObjectURL(b);
   }).catch(()=>{});
-  const esc2 = x => x.replace(/&/g,"&amp;").replace(/</g,"&lt;");
-  const emailHTML = () => `<div style="font-family:Arial,Helvetica,sans-serif;font-size:11pt;color:#1f2a33">
-<p style="margin:0 0 12px">${esc2(intro)}</p>
-<p style="margin:0 0 14px">Take the quiz: <a href="${tagged("email")}">${QUIZ_URL}</a></p>
-${dataURL?`<p style="margin:0 0 14px"><a href="${tagged("email")}"><img src="${dataURL}" width="600" alt="${esc2(p.name)}, HTS ${p.hts}" style="display:block;width:600px;max-width:100%;height:auto;border:0"></a></p>`:""}
-</div>`;
   const openEmail = body => {
     const l = document.createElement("a");
     l.href = "mailto:?subject="+encodeURIComponent(subject)+(body?"&body="+encodeURIComponent(body):"");
@@ -813,7 +807,8 @@ ${dataURL?`<p style="margin:0 0 14px"><a href="${tagged("email")}"><img src="${d
     say("LinkedIn is open with your post and the quiz link. The preview card appears below your text.");
   };
 
-  /* Challenge your team: an email with the write-up, the link, then the graphic, all above the signature. */
+  /* Challenge your team: the email opens with the write-up and link already in it.
+     The graphic is copied so it can be pasted right after the link, above the signature. */
   document.getElementById("team").onclick = async () => {
     track("quiz_share",p.key,{share_method:"team"});
     if(phone && png){
@@ -824,22 +819,13 @@ ${dataURL?`<p style="margin:0 0 14px"><a href="${tagged("email")}"><img src="${d
       }
     }
     let copied = false;
-    if(window.ClipboardItem && navigator.clipboard && navigator.clipboard.write){
-      try {
-        await navigator.clipboard.write([new ClipboardItem({
-          "text/html": new Blob([emailHTML()],{type:"text/html"}),
-          "text/plain": new Blob([plain],{type:"text/plain"})
-        })]);
-        copied = true;
-      } catch(e){}
+    if(png && window.ClipboardItem && navigator.clipboard && navigator.clipboard.write){
+      try { await navigator.clipboard.write([new ClipboardItem({"image/png":png})]); copied = true; } catch(e){}
     }
-    if(copied){
-      openEmail("");
-      say(`Your challenge is copied. Click into the new email and press ${/Mac|iPhone|iPad/.test(navigator.platform)?"Cmd":"Ctrl"}+V. The message, link and graphic go in above your signature.`);
-    } else {
-      openEmail(plain);
-      say("Your email is open with the message and link.");
-    }
+    openEmail(plain+"\n\n");
+    say(copied
+      ? `Your email is open with the message and link. Click at the end of the link and press ${/Mac|iPhone|iPad/.test(navigator.platform)?"Cmd":"Ctrl"}+V to add your graphic above your signature.`
+      : "Your email is open with the message and link.");
   };
 }
 
