@@ -39,7 +39,7 @@ h1,h2,h3{text-wrap:balance;margin:0;line-height:1.15}
 p{margin:0}
 button{font:inherit;color:inherit;cursor:pointer}
 :focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:6px}
-.wrap{max-width:980px;margin:0 auto;scroll-margin-top:180px}
+.wrap{max-width:980px;margin:0 auto;scroll-margin-top:220px}
 .mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
 .eyebrow{font-size:.75rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--brand)}
 
@@ -485,11 +485,22 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":
    screen change (such as the form loading) is corrected unless the person has started scrolling. */
 try { history.scrollRestoration = "manual"; } catch(e){}
 let booted = false, holdTop = 0;
+/* On a webpage: is the top of the quiz anywhere on screen? Only when it is not does the quiz move the page. */
+let quizTopVisible = true;
+if(window.parent !== window && "IntersectionObserver" in window){
+  /* Covers the logo and progress bar. If any part of it is off screen, the next screen brings it back. */
+  const w = document.querySelector(".wrap"), mark = document.createElement("div");
+  w.style.position = "relative";
+  mark.style.cssText = "position:absolute;left:0;top:0;width:1px;height:140px;pointer-events:none";
+  w.prepend(mark);
+  new IntersectionObserver(es=>{ quizTopVisible = es[es.length-1].intersectionRatio > 0.98; },{threshold:[0,0.5,0.98,1]}).observe(mark);
+}
 const jumpTop = host => {
   window.scrollTo({top:0,left:0,behavior:"instant"});
   document.documentElement.scrollTop = 0; document.body.scrollTop = 0;
   /* Embedded on a webpage: also bring the host page back to the quiz, clear of a fixed site header. */
-  if(host && window.parent !== window) document.querySelector(".wrap").scrollIntoView({block:"start",behavior:"instant"});
+  /* Phones scroll to reach the answers, so a fixed site header can hide the top there: always realign. */
+  if(host && window.parent !== window && (!quizTopVisible || matchMedia("(pointer:coarse)").matches)) document.querySelector(".wrap").scrollIntoView({block:"start",behavior:"instant"});
 };
 const top0 = () => {
   /* Only move the surrounding webpage when the person navigates, never when the quiz first loads. */
