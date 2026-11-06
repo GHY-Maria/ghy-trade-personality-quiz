@@ -614,6 +614,8 @@ function showResult(t, fromIndex){
   app.innerHTML = `
   ${hero(p, fromIndex && !mine ? "Trade Personality Classification" : "Official Trade Personality Classification", shareRow)}
 
+  ${lastWords(p)}
+
   <section class="sec">
     <h2>Tariff Classification Record</h2>
     <details class="hts-full"><summary><span>Tariff Table</span></summary>
@@ -654,8 +656,6 @@ function showResult(t, fromIndex){
       <div class="box"><h3>Essential characteristics</h3>${ul(p.enl)}</div>
     </div>
   </section>
-
-  ${lastWords(p)}
 
   ${mine ? `<section class="sticker" id="sticker">${stickerHTML()}</section>` : ""}
 
