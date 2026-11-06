@@ -39,7 +39,7 @@ h1,h2,h3{text-wrap:balance;margin:0;line-height:1.15}
 p{margin:0}
 button{font:inherit;color:inherit;cursor:pointer}
 :focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:6px}
-.wrap{max-width:980px;margin:0 auto}
+.wrap{max-width:980px;margin:0 auto;scroll-margin-top:120px}
 .mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
 .eyebrow{font-size:.75rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--brand)}
 
@@ -447,7 +447,6 @@ let idx = 0, result = null, busy = false;
 
 /* ===== SETTINGS: the two lines to edit ===== */
 const QUIZ_URL = "https://www.ghy.com/trade-guides/trade-personality-quiz/"; // the only link used in posts and challenges
-const SHARE_PAGES = "https://ghy-maria.github.io/ghy-trade-personality-quiz/share/"; // hosts the graphic card pages LinkedIn reads
 const GA4_ID = "";    // Add the GHY GA4 Measurement ID (G-XXXXXXXXXX). Leave blank if the page already loads GA4 or Tag Manager.
 /* =========================================== */
 
@@ -486,6 +485,8 @@ const top0 = () => {
   const jump = () => {
     window.scrollTo({top:0,left:0,behavior:"instant"});
     document.documentElement.scrollTop = 0; document.body.scrollTop = 0;
+    /* Embedded on a webpage: also bring the host page back to the quiz, clear of a fixed site header. */
+    if(window.parent !== window) document.querySelector(".wrap").scrollIntoView({block:"start",behavior:"instant"});
   };
   jump(); requestAnimationFrame(jump);
 };
@@ -749,9 +750,13 @@ function wireShare(p){
   const caption = `I was classified as ${p.name} (HTS ${p.hts}) in GHY's Essential Character™ Trade Personality Quiz.\n\nI'm a ${a}. Tag the ${short(t.name)} on your team.\n\nWhat's your trade personality? ${QUIZ_URL}`;
   document.getElementById("sh").onclick = async () => {
     track("quiz_share",p.key,{share_method:"linkedin"});
-    const copied = await copy(caption);
-    window.open("https://www.linkedin.com/sharing/share-offsite/?url="+encodeURIComponent(SHARE_PAGES+p.key+".html"),"_blank","noopener");
-    say(copied ? "Your graphic card is loaded in LinkedIn. Paste your caption above it. We copied it for you." : caption);
+    copy(caption);
+    if(phone){
+      try { await navigator.share({text:caption}); return; }
+      catch(err){ if(err.name==="AbortError") return; }
+    }
+    window.open("https://www.linkedin.com/feed/?shareActive=true&text="+encodeURIComponent(caption),"_blank","noopener");
+    say("LinkedIn is open with your post ready. If the text is blank, paste it in. We copied it for you.");
   };
   document.getElementById("team").onclick = async () => {
     const msg = `I was classified as ${p.name} in GHY's Essential Character™ Trade Personality Quiz. What's yours? ${QUIZ_URL}`;
