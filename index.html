@@ -481,15 +481,23 @@ const startQuiz = () => {
   quizShell(); top0();
 };
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const top0 = () => {
-  const jump = () => {
-    window.scrollTo({top:0,left:0,behavior:"instant"});
-    document.documentElement.scrollTop = 0; document.body.scrollTop = 0;
-    /* Embedded on a webpage: also bring the host page back to the quiz, clear of a fixed site header. */
-    if(window.parent !== window) document.querySelector(".wrap").scrollIntoView({block:"start",behavior:"instant"});
-  };
-  jump(); requestAnimationFrame(jump);
+/* Every screen opens at the top. A refresh does too, and anything that nudges the page just after a
+   screen change (such as the form loading) is corrected unless the person has started scrolling. */
+try { history.scrollRestoration = "manual"; } catch(e){}
+let booted = false, holdTop = 0;
+const jumpTop = () => {
+  window.scrollTo({top:0,left:0,behavior:"instant"});
+  document.documentElement.scrollTop = 0; document.body.scrollTop = 0;
+  /* Embedded on a webpage: also bring the host page back to the quiz, clear of a fixed site header. */
+  if(booted && window.parent !== window) document.querySelector(".wrap").scrollIntoView({block:"start",behavior:"instant"});
 };
+const top0 = () => {
+  jumpTop(); requestAnimationFrame(jumpTop);
+  holdTop = Date.now() + 1500;
+};
+["wheel","touchmove","keydown"].forEach(t=>addEventListener(t,()=>{ holdTop = 0; },{passive:true}));
+addEventListener("scroll",()=>{ if(Date.now() < holdTop && window.scrollY > 0) jumpTop(); },{passive:true});
+addEventListener("pageshow",()=>{ if(!location.hash) window.scrollTo(0,0); });
 
 function landing(){
   setURL("");
@@ -510,6 +518,7 @@ function landing(){
     </div>
   </section>`;
   document.getElementById("go").onclick = startQuiz;
+  top0();
 }
 
 function quizShell(){
@@ -745,18 +754,36 @@ function wireShare(p){
   const say = m => { note.textContent = m; note.hidden = false; };
   const copy = async txt => { try { await navigator.clipboard.writeText(txt); return true; } catch(e){ return false; } };
   const phone = matchMedia("(pointer:coarse)").matches && navigator.share;
+  let graphic = null;
+  fetch(`share/${p.key}.png`).then(r=>r.ok?r.blob():null).then(b=>{ graphic = b; }).catch(()=>{});
   const short = n => n.replace("The ","");
   const a = short(p.name), t = P[p.tag];
   const caption = `I was classified as ${p.name} (HTS ${p.hts}) in GHY's Essential Character™ Trade Personality Quiz.\n\nI'm a ${a}. Tag the ${short(t.name)} on your team.\n\nWhat's your trade personality? ${QUIZ_URL}`;
   document.getElementById("sh").onclick = async () => {
     track("quiz_share",p.key,{share_method:"linkedin"});
-    copy(caption);
+    const file = graphic ? new File([graphic],`essential-character-${p.key}.png`,{type:"image/png"}) : null;
+    /* Phones: hand the graphic and caption to the LinkedIn app through the share menu. */
     if(phone){
-      try { await navigator.share({text:caption}); return; }
-      catch(err){ if(err.name==="AbortError") return; }
+      copy(caption);
+      try {
+        await navigator.share(file && navigator.canShare && navigator.canShare({files:[file]}) ? {files:[file],text:caption} : {text:caption});
+        return;
+      } catch(err){ if(err.name==="AbortError") return; }
+    }
+    /* Desktop: LinkedIn cannot take an image through a link, so the graphic goes on the clipboard and the caption is filled in. */
+    let copied = false;
+    if(graphic && window.ClipboardItem && navigator.clipboard && navigator.clipboard.write){
+      try { await navigator.clipboard.write([new ClipboardItem({"image/png":graphic})]); copied = true; } catch(e){}
     }
     window.open("https://www.linkedin.com/feed/?shareActive=true&text="+encodeURIComponent(caption),"_blank","noopener");
-    say("LinkedIn is open with your post ready. If the text is blank, paste it in. We copied it for you.");
+    if(copied){
+      say(`Your graphic is copied. Click into your LinkedIn post and press ${/Mac|iPhone|iPad/.test(navigator.platform)?"Cmd":"Ctrl"}+V to add it.`);
+    } else if(graphic){
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(graphic); a.download = file.name;
+      document.body.appendChild(a); a.click(); a.remove();
+      say("Your graphic has been saved. Add it to your LinkedIn post with the photo icon.");
+    } else say("LinkedIn is open with your post ready.");
   };
   document.getElementById("team").onclick = async () => {
     const msg = `I was classified as ${p.name} in GHY's Essential Character™ Trade Personality Quiz. What's yours? ${QUIZ_URL}`;
@@ -805,6 +832,7 @@ function boot(){
   } else landing();
 }
 boot();
+booted = true;
 </script>
 
 </body></html>
