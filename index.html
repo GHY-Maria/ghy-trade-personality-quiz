@@ -773,7 +773,7 @@ function wireShare(p){
   const caption = `I was classified as ${p.name} (HTS ${p.hts}) in GHY's Essential Character™ Trade Personality Quiz.\n\nI'm a ${a}. Tag the ${short(t.name)} on your team.\n\nWhat's your trade personality? ${tagged("linkedin")}`;
   const subject = "What's your trade personality?";
   const intro = `I was classified as ${p.name} (HTS ${p.hts}) in GHY's Essential Character™ Trade Personality Quiz. What's yours?`;
-  const plain = `${intro}\n\nTake the quiz: ${tagged("email")}`;
+  const plain = `${intro}\n\nTake the Essential Character Quiz: ${tagged("email")}`;
 
   /* Email graphic: the personality card, sized for an email body and embedded in the message itself. */
   let png = null, dataURL = "";
@@ -807,8 +807,8 @@ function wireShare(p){
     say("LinkedIn is open with your post and the quiz link. The preview card appears below your text.");
   };
 
-  /* Challenge your team: the email opens with the write-up. One paste adds the hyperlinked
-     "Essential Character Quiz" and the graphic, above the signature. */
+  /* Challenge your team: the email opens with the write-up and the tracked quiz link.
+     One paste adds the graphic, linked to the same tracked link, above the signature. */
   document.getElementById("team").onclick = async () => {
     track("quiz_share",p.key,{share_method:"team"});
     if(phone && png){
@@ -818,24 +818,22 @@ function wireShare(p){
         catch(err){ if(err.name==="AbortError") return; }
       }
     }
-    /* An email opened from a web page can only hold plain text, so the hyperlinked
-       "Essential Character Quiz" line and the graphic are copied, ready to paste under the write-up. */
+    /* An email opened from a web page can only hold plain text, so the graphic is copied, ready to paste. */
     const link = tagged("email");
-    const html = `<p style="margin:0 0 12px;font-family:Arial,Helvetica,sans-serif;font-size:11pt">Take the <a href="${link}">Essential Character Quiz</a></p>`+
-      (dataURL ? `<p style="margin:0 0 12px"><a href="${link}"><img src="${dataURL}" width="600" alt="${p.name}, HTS ${p.hts}" style="display:block;width:600px;max-width:100%;height:auto;border:0"></a></p>` : "");
+    const html = dataURL ? `<p style="margin:0 0 12px"><a href="${link}"><img src="${dataURL}" width="600" alt="${p.name}, HTS ${p.hts}" style="display:block;width:600px;max-width:100%;height:auto;border:0"></a></p>` : "";
     let copied = false;
-    if(window.ClipboardItem && navigator.clipboard && navigator.clipboard.write){
+    if(html && window.ClipboardItem && navigator.clipboard && navigator.clipboard.write){
       try {
         await navigator.clipboard.write([new ClipboardItem({
           "text/html": new Blob([html],{type:"text/html"}),
-          "text/plain": new Blob([`Take the Essential Character Quiz: ${link}`],{type:"text/plain"})
+          "image/png": png
         })]);
         copied = true;
       } catch(e){}
     }
-    openEmail(copied ? intro+"\n\n" : plain+"\n\n");
+    openEmail(plain+"\n\n");
     say(copied
-      ? `Your email is open with the message. Click at the end of it and press ${/Mac|iPhone|iPad/.test(navigator.platform)?"Cmd":"Ctrl"}+V to add the quiz link and your graphic above your signature.`
+      ? `Your email is open with the message and quiz link. Click at the end of it and press ${/Mac|iPhone|iPad/.test(navigator.platform)?"Cmd":"Ctrl"}+V to add your graphic above your signature.`
       : "Your email is open with the message and link.");
   };
 }
