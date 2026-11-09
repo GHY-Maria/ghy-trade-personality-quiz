@@ -793,10 +793,11 @@ const showSent = () => {
   const s = document.getElementById("sticker");
   if(s) s.innerHTML = `<h2>Your sticker is on its way.</h2><p class="sent">Thanks. We have your details.</p>`;
 };
+/* Counted once per form shown, so every real submission counts, but one submission is never counted twice. */
+let formCounted = false;
 function formSubmitted(key){
-  const flag = "ec_sent_"+key;
-  if(store.get("sessionStorage",flag)) return;
-  store.set("sessionStorage",flag,"1");
+  if(formCounted) return;
+  formCounted = true;
   track("quiz_form_submit",key);
 }
 /* The sticker form is a cross-site frame. A click into it blurs this window, which is the form start.
@@ -824,17 +825,25 @@ function wireForm(p){
     document.head.appendChild(s);
   }
   /* The frame reloads only when the form is submitted (its pages switch without reloading). */
+  formCounted = false;
   let loads = 0;
   f.addEventListener("load", () => { loads++; if(loads > 1) formSubmitted(p.key); });
 }
 
 /* Backup sizing, in case Jotform's helper script is blocked. */
 addEventListener("message", e => {
-  if(!/^https:\/\/(form\.)?jotform\.com$/.test(e.origin) || typeof e.data !== "string") return;
+  if(!/^https:\/\/([a-z0-9-]+\.)?jotform\.(com|pro)$/.test(e.origin) || !e.data) return;
   const f = document.getElementById("JotFormIFrame-"+JF_ID); if(!f) return;
-  const a = e.data.split(":");
-  if(a[0]==="setHeight" && +a[1] > 0) f.style.height = (+a[1]) + "px";
-  if(/submission-completed/.test(e.data) && result) formSubmitted(P[result].key);
+  /* Jotform reports a finished submission as a message, sent as an object or as text. */
+  let done = false;
+  if(typeof e.data === "object") done = e.data.action === "submission-completed" || e.data.event === "submission-completed";
+  else if(typeof e.data === "string"){
+    const a = e.data.split(":");
+    if(a[0]==="setHeight" && +a[1] > 0) f.style.height = (+a[1]) + "px";
+    done = /submission-completed/.test(e.data);
+    if(!done && e.data.charAt(0) === "{"){ try { done = JSON.parse(e.data).action === "submission-completed"; } catch(err){} }
+  }
+  if(done && result) formSubmitted(P[result].key);
 });
 
 function wireShare(p){
