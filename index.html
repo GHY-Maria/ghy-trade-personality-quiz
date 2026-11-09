@@ -199,8 +199,8 @@ table.sched{min-width:780px;font-size:.86rem}
 /* sticker */
 .sticker{margin-top:38px;background:var(--surface);border:2px dashed var(--gold);border-radius:18px;padding:clamp(20px,4vw,36px)}
 .sticker > *{min-width:0}
-.pipedriveWebForms{margin-top:14px;min-height:120px}
-.pipedriveWebForms iframe{max-width:100%}
+.jf-wrap{margin-top:0}
+.jf-frame{display:block;width:100%;min-width:100%;height:539px;border:0;background:transparent;overflow:hidden}
 .pd-frame{display:block;width:100%;height:640px;border:0;background:#fff;border-radius:8px}
 .pd-fallback{margin-top:8px}
 .share-note{margin-top:10px}
@@ -725,12 +725,14 @@ function wireCommon(){
   const m = document.getElementById("mine"); if(m) m.onclick = () => showResult(result);
 }
 
-const PD_FORM = "https://webforms.pipedrive.com/f/1wXLtJk9dGXJ0feZOLKO8lVXZzyz4jVTxiNArfl3d8W6RxHXVRWChmmlwZzlMs4M3";
+const JF_ID = "263125225446049";
+const JF_URL = "https://form.jotform.com/" + JF_ID;
 
 function stickerHTML(){
-  return `<h2>Want the sticker? Tell us where to send it.</h2>
-    <div class="pipedriveWebForms" id="pdform" data-pd-webforms="${PD_FORM}"></div>
-    <p class="fine pd-fallback">Form not loading? <a href="${PD_FORM}" target="_blank" rel="noopener">Open it in a new tab</a>.</p>`;
+  return `<div class="jf-wrap" id="stickerform">
+      <iframe id="JotFormIFrame-${JF_ID}" class="jf-frame" title="Sticker request form" src="${JF_URL}?isIframeEmbed=1" scrolling="no" allow="geolocation; microphone; camera; fullscreen"></iframe>
+    </div>
+    <p class="fine pd-fallback">Form not loading? <a href="${JF_URL}" target="_blank" rel="noopener">Open it in a new tab</a>.</p>`;
 }
 
 const showSent = () => {
@@ -743,35 +745,43 @@ function formSubmitted(key){
   store.set("sessionStorage",flag,"1");
   track("quiz_form_submit",key);
 }
-/* The Pipedrive form is a cross-site frame. A click into it blurs this window, which is the form start.
-   The form's redirect (thanks.html) reports the submission back here. */
+/* The sticker form is a cross-site frame. A click into it blurs this window, which is the form start.
+   Submitting reloads the form's frame, which counts the submission (see wireForm). */
 let formStarted = false;
 addEventListener("blur",()=>setTimeout(()=>{
   const a = document.activeElement;
-  if(!formStarted && result && a && a.tagName==="IFRAME" && a.closest("#pdform")){ formStarted = true; track("quiz_form_start",P[result].key); }
+  if(!formStarted && result && a && a.tagName==="IFRAME" && a.closest("#stickerform")){ formStarted = true; track("quiz_form_start",P[result].key); }
 },0));
 addEventListener("message",e=>{
   if(e.origin===location.origin && e.data==="ec_form_submit" && result){ formSubmitted(P[result].key); showSent(); }
 });
 
 function wireForm(p){
-  const pd = document.getElementById("pdform");
-  // Pipedrive's loader builds the form. If it has not done so shortly after this screen renders, frame the form directly.
-  const frameForm = () => {
-    if(!pd.isConnected || pd.querySelector("iframe")) return;
-    const f = document.createElement("iframe");
-    f.src = PD_FORM; f.title = "Sticker request form"; f.className = "pd-frame"; f.loading = "eager";
-    pd.appendChild(f);
-    new MutationObserver((_, o) => {
-      if(pd.querySelectorAll("iframe").length > 1){ f.remove(); o.disconnect(); }
-    }).observe(pd, {childList:true, subtree:true});
-  };
-  const loader = document.createElement("script");
-  loader.src = "https://webforms.pipedrive.com/f/loader";
-  loader.onerror = frameForm;
-  pd.appendChild(loader);
-  setTimeout(frameForm, 2500);
+  const f = document.getElementById("JotFormIFrame-"+JF_ID);
+  if(!f) return;
+  /* No inner scrollbar: the form tells the page its height and the frame grows to fit, step by step. */
+  const fit = () => { if(window.jotformEmbedHandler) window.jotformEmbedHandler(`iframe[id='JotFormIFrame-${JF_ID}']`, "https://form.jotform.com/"); };
+  const h = document.getElementById("jf-handler");
+  if(window.jotformEmbedHandler) fit();
+  else if(h) h.addEventListener("load", fit);
+  else {
+    const s = document.createElement("script");
+    s.id = "jf-handler"; s.src = "https://cdn.jotfor.ms/s/umd/latest/for-form-embed-handler.js"; s.onload = fit;
+    document.head.appendChild(s);
+  }
+  /* The frame reloads only when the form is submitted (its pages switch without reloading). */
+  let loads = 0;
+  f.addEventListener("load", () => { loads++; if(loads > 1) formSubmitted(p.key); });
 }
+
+/* Backup sizing, in case Jotform's helper script is blocked. */
+addEventListener("message", e => {
+  if(!/^https:\/\/(form\.)?jotform\.com$/.test(e.origin) || typeof e.data !== "string") return;
+  const f = document.getElementById("JotFormIFrame-"+JF_ID); if(!f) return;
+  const a = e.data.split(":");
+  if(a[0]==="setHeight" && +a[1] > 0) f.style.height = (+a[1]) + "px";
+  if(/submission-completed/.test(e.data) && result) formSubmitted(P[result].key);
+});
 
 function wireShare(p){
   const note = document.getElementById("sharenote");
