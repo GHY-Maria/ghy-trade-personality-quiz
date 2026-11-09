@@ -480,6 +480,20 @@ if(GA4_ID && !inGhyPage && typeof window.gtag!=="function"){
 }
 /* Events: quiz_start, quiz_complete, quiz_share, quiz_form_start, quiz_form_submit.
    personality = the result (on quiz_start, the personality of a shared link, or "direct"). */
+/* On the ghy.com page: tell the page how tall the quiz is, so its frame fits each screen with no inner scrollbar. */
+if(inGhyPage){
+  let last = 0;
+  const sendHeight = () => {
+    const w = document.querySelector(".wrap"); if(!w) return;
+    const h = Math.ceil(w.getBoundingClientRect().bottom + window.scrollY + 32);
+    if(Math.abs(h - last) < 2) return;
+    last = h;
+    try { window.parent.postMessage({type:"ghy-quiz:height", height:h}, HOST_ORIGIN); } catch(e){}
+  };
+  if("ResizeObserver" in window) new ResizeObserver(sendHeight).observe(document.querySelector(".wrap"));
+  addEventListener("load", sendHeight);
+  setTimeout(sendHeight, 0);
+}
 function track(name, personality, extra){
   const data = {personality, share_source:ref.source, ...extra};
   if(inGhyPage){ try { window.parent.postMessage({ecEvent:name, params:data}, HOST_ORIGIN); } catch(e){} return; }
@@ -496,24 +510,33 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":
    screen change (such as the form loading) is corrected unless the person has started scrolling. */
 try { history.scrollRestoration = "manual"; } catch(e){}
 let booted = false, holdTop = 0;
-const jumpTop = () => {
+/* On a webpage: is the top of the quiz anywhere on screen? Only when it is not does the quiz move the page. */
+let quizTopVisible = true;
+if(window.parent !== window && "IntersectionObserver" in window){
+  /* Covers the logo and progress bar. If any part of it is off screen, the next screen brings it back. */
+  const w = document.querySelector(".wrap"), mark = document.createElement("div");
+  w.style.position = "relative";
+  mark.style.cssText = "position:absolute;left:0;top:0;width:1px;height:140px;pointer-events:none";
+  w.prepend(mark);
+  new IntersectionObserver(es=>{ quizTopVisible = es[es.length-1].intersectionRatio > 0.98; },{threshold:[0,0.5,0.98,1]}).observe(mark);
+}
+const jumpTop = host => {
   window.scrollTo({top:0,left:0,behavior:"instant"});
   document.documentElement.scrollTop = 0; document.body.scrollTop = 0;
-};
-/* Embedded on ghy.com: ask the page to go back to its own top (site header, title and the whole quiz).
-   The page does the scrolling itself, so the quiz never pulls the page under the fixed header. */
-const pageTop = () => {
-  if(window.parent === window) return;
-  try { window.parent.postMessage({type:"ghy-quiz:scroll-top"}, HOST_ORIGIN); } catch(e){}
+  /* Embedded on a webpage: also bring the host page back to the quiz, clear of a fixed site header. */
+  /* Phones scroll to reach the answers, so a fixed site header can hide the top there: always realign. */
+  /* On the ghy.com page: ask the page to go to its very top, so the site header and the quiz are in view. */
+  if(host && inGhyPage){ try { window.parent.postMessage({type:"ghy-quiz:scroll-top"}, HOST_ORIGIN); } catch(e){} return; }
+  if(host && window.parent !== window && (!quizTopVisible || matchMedia("(pointer:coarse)").matches)) document.querySelector(".wrap").scrollIntoView({block:"start",behavior:"instant"});
 };
 const top0 = () => {
   /* Only move the surrounding webpage when the person navigates, never when the quiz first loads. */
-  jumpTop(); requestAnimationFrame(jumpTop);
-  if(booted) pageTop();
+  const host = booted;
+  jumpTop(host); requestAnimationFrame(()=>jumpTop(host));
   holdTop = Date.now() + 1500;
 };
 ["wheel","touchmove","keydown"].forEach(t=>addEventListener(t,()=>{ holdTop = 0; },{passive:true}));
-addEventListener("scroll",()=>{ if(Date.now() < holdTop && window.scrollY > 0) jumpTop(); },{passive:true});
+addEventListener("scroll",()=>{ if(Date.now() < holdTop && window.scrollY > 0) jumpTop(false); },{passive:true});
 addEventListener("pageshow",()=>{ if(!location.hash) window.scrollTo(0,0); });
 
 function landing(){
