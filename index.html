@@ -746,9 +746,9 @@ const JF_URL = "https://form.jotform.com/" + JF_ID;
 
 function stickerHTML(){
   return `<div class="jf-wrap" id="stickerform">
-      <iframe id="JotFormIFrame-${JF_ID}" class="jf-frame" title="Sticker request form" src="${JF_URL}?isIframeEmbed=1" scrolling="no" allow="geolocation; microphone; camera; fullscreen"></iframe>
+      <iframe id="JotFormIFrame-${JF_ID}" class="jf-frame" title="Sticker request form" src="${JF_URL}?isIframeEmbed=1&personality=${result ? P[result].key : ""}" scrolling="no" allow="geolocation; microphone; camera; fullscreen"></iframe>
     </div>
-    <p class="fine pd-fallback">Form not loading? <a href="${JF_URL}" target="_blank" rel="noopener">Open it in a new tab</a>.</p>`;
+    <p class="fine pd-fallback">Form not loading? <a href="${JF_URL}?personality=${result ? P[result].key : ""}" target="_blank" rel="noopener">Open it in a new tab</a>.</p>`;
 }
 
 const showSent = () => {
