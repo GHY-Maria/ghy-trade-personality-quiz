@@ -462,16 +462,27 @@ const setURL = q => { try { history.replaceState(null,"",location.pathname+q); }
 let ref = {personality:"direct", source:"direct"};
 try { ref = JSON.parse(store.get("sessionStorage","ec_ref")) || ref; } catch(e){}
 
-if(GA4_ID && typeof window.gtag!=="function"){
+/* Where events go.
+   Inside the ghy.com page: browsers block analytics cookies in a frame from another site, so GA4 would
+   record nothing here. Each event is passed to the ghy.com page, which records it in GA4 itself.
+   Opened on its own: the quiz records events in GA4 directly. */
+const HOST_ORIGIN = "https://www.ghy.com";
+const inGhyPage = (() => {
+  if(window.parent === window) return false;
+  try { if(location.ancestorOrigins && location.ancestorOrigins.length) return location.ancestorOrigins[0] === HOST_ORIGIN; } catch(e){}
+  return /^https:\/\/www\.ghy\.com\//.test(document.referrer);
+})();
+if(GA4_ID && !inGhyPage && typeof window.gtag!=="function"){
   window.dataLayer = window.dataLayer || [];
   window.gtag = function(){ dataLayer.push(arguments); };
   gtag("js",new Date()); gtag("config",GA4_ID);
   const s = document.createElement("script"); s.async = true; s.src = "https://www.googletagmanager.com/gtag/js?id="+GA4_ID; document.head.appendChild(s);
 }
-/* Events: quiz_start, quiz_complete, quiz_share, quiz_form_start, quiz_form_submit, quiz_shared_visit.
-   personality = the result, except on quiz_start and quiz_shared_visit, where it is the personality of the shared link ("direct" if none). */
+/* Events: quiz_start, quiz_complete, quiz_share, quiz_form_start, quiz_form_submit.
+   personality = the result (on quiz_start, the personality of a shared link, or "direct"). */
 function track(name, personality, extra){
   const data = {personality, share_source:ref.source, ...extra};
+  if(inGhyPage){ try { window.parent.postMessage({ecEvent:name, params:data}, HOST_ORIGIN); } catch(e){} return; }
   if(typeof window.gtag==="function") window.gtag("event",name,data);
   else { window.dataLayer = window.dataLayer || []; window.dataLayer.push({event:name,...data}); }
 }
